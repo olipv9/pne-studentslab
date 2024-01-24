@@ -1,2 +1,2 @@
 # This is my first program in pycharm:
-print('Hello world.')
+print('Hello world')
