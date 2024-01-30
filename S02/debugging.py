@@ -1,4 +1,5 @@
 # exercise 1:
+
 l = []
 for i in range(12):
     if len(l) < 11:
