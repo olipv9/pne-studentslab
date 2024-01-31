@@ -13,4 +13,3 @@ for i in user_seq:
         final_d[i] += 1
 for key, value in final_d.items():
     print('The number of', key, 'is :', value)
-
