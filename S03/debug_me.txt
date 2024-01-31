@@ -1,0 +1,6 @@
+def f(a, b, c, d):
+    t0 = a + b - g(a, 0)
+    t1 = g(c, d)
+    t3 = 2 * (t0 / t1) # The error happens here.
+    return t0 + 2*t1 + t3*t3
+# The error happens because it has not been taken into account the fact that there could be zero division.
