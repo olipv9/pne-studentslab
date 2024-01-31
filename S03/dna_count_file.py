@@ -10,8 +10,8 @@ with open('dna.txt', 'r') as f:
                 final_d[e] += 1
                 count += 1
     print('Total length', count)
-    print('The number of A:',final_d['A'])
-    print('The number of T:',final_d['T'])
-    print('The number of C:',final_d['C'])
-    print('The number of G:',final_d['G'])
+    print('The number of A:', final_d['A'])
+    print('The number of T:', final_d['T'])
+    print('The number of C:', final_d['C'])
+    print('The number of G:', final_d['G'])
 
