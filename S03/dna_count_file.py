@@ -15,3 +15,4 @@ with open('dna.txt', 'r') as f:
     print('The number of C:', final_d['C'])
     print('The number of G:', final_d['G'])
 
+
