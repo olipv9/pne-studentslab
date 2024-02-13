@@ -21,3 +21,21 @@ def seq_len(seq):
         for line in f:
             sequence += line.strip('\n')
     return len(sequence)
+
+# 4:
+def seq_count_base(seq, base):
+    try:
+        with open(seq, 'r') as file:
+            lines = file.readlines()
+            seq_joined = ''.join(lines[1:])
+    except FileNotFoundError:
+        print("Error: File", seq, "not found.")
+        count_base = None
+    else:
+        count_base = 0
+        for i in seq_joined:
+            if i == base.upper():
+                count_base += 1
+            else:
+                pass
+    return count_base
