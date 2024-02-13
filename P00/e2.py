@@ -1,3 +1,4 @@
+
 def seq_read_fasta(filename):
     try:
         with open(filename, 'r') as file:
@@ -10,10 +11,8 @@ def seq_read_fasta(filename):
     return sequence
 
 # Example:
-filename = '../sequences/ADA_sequence.fa'
+filename = '../sequences/U5_sequence.fa'
 sequence = seq_read_fasta(filename)
 print("DNA sequence:")
 print(sequence)
-
-
 
