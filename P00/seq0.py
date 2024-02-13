@@ -64,3 +64,16 @@ def seq_count(seq):
                 dic_bases['G'] += 1
     return dic_bases
 
+# 6:
+
+
+def seq_reverse(seq, n):
+    try:
+        with open(seq, 'r') as file:
+            lines = file.readlines()
+            seq_joined = ''.join(lines[1:])
+            sequence = seq_joined[:n]
+    except FileNotFoundError:
+        print("Error: File", seq, "not found.")
+        sequence = None
+    return sequence
