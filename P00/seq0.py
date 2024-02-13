@@ -39,3 +39,28 @@ def seq_count_base(seq, base):
             else:
                 pass
     return count_base
+
+# 5:
+
+
+def seq_count(seq):
+    try:
+        with open(seq, 'r') as file:
+            lines = file.readlines()
+            seq_joined = ''.join(lines[1:])
+    except FileNotFoundError:
+        print("Error: File", seq, "not found.")
+        dic_bases = {}
+    else:
+        dic_bases = {'A': 0, 'G': 0, 'T': 0, 'C': 0}
+        for i in seq_joined:
+            if i == 'A':
+                dic_bases['A'] += 1
+            elif i == 'T':
+                dic_bases['T'] += 1
+            elif i == 'C':
+                dic_bases['C'] += 1
+            elif i == 'G':
+                dic_bases['G'] += 1
+    return dic_bases
+
