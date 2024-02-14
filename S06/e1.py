@@ -1,8 +1,6 @@
 import termcolor
 
 # 1:
-
-
 class Seq:
     """A class for representing sequences"""
     def __init__(self, strbases):
