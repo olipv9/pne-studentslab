@@ -77,3 +77,23 @@ def seq_reverse(seq, n):
         print("Error: File", seq, "not found.")
         sequence = None
     return sequence
+
+
+# 7:
+
+
+def seq_complement(seq):
+    complementary_bases = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G'}
+    try:
+        with open(seq, 'r') as file:
+            lines = file.readlines()
+            seq_joined = ''.join(lines[1:]).replace('\n','')
+    except FileNotFoundError:
+        print("Error: File", seq, "not found.")
+        sequence = None
+    else:
+        print('Fragment:', seq_joined)
+        print('Complementary: ', end='')
+        for i in seq_joined:
+            if i in complementary_bases.keys():
+                print(complementary_bases[i], end='')
