@@ -15,6 +15,8 @@ class Seq:
 
     def len(self):
         return len(self.strbases)
+
+
 def print_seqs(seq_list):
     for i in seq_list:
         print('Sequence:', seq_list.index(i), '(Length:' + str(i.len()) + ')', i)

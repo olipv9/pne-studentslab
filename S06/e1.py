@@ -29,5 +29,7 @@ class Seq:
 
 s1 = Seq("AGTACACTGGT")
 s2 = Seq("Hello? Am I a valid sequence?")
-termcolor.cprint(f"Sequence 1: {s1}",'red')
-termcolor.cprint(f"Sequence 2: {s2}",'blue')
+termcolor.cprint(f"Sequence 1: {s1}", 'red')
+termcolor.cprint(f"Sequence 2: {s2}", 'blue')
+
+
