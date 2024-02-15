@@ -5,15 +5,24 @@ class Seq:
         for i in strbases:
             if i in d:
                 self.strbases = strbases
-                print("New sequence created!")
             else:
                 self.strbases = 'ERROR'
+        if self.strbases == 'ERROR':
+            print('ERROR!!')
+        else:
+            print('A new sequence was created!')
 
     def __str__(self):
+
         return self.strbases
 
     def len(self):
         return len(self.strbases)
+
+
+def print_seqs(seq_list):
+    for i in seq_list:
+        print('Sequence:', seq_list.index(i), '(Length:' + str(i.len()) + ')', i)
 
 
 def generate_seqs(pattern, number):
@@ -27,20 +36,3 @@ def generate_seqs(pattern, number):
         else:
             error = True
     return list_1
-
-
-seq_list = generate_seqs('A', 3)
-print(seq_list)
-
-print('List 1:')
-seq_list = generate_seqs('A', 3)
-for i in seq_list:
-    y = f'Sequence:{seq_list.index(i)} (Length:{str(len(i))}) {i}'
-    print(y)
-
-print('List 2:')
-seq_list = generate_seqs('AC', 4)
-for i in seq_list:
-    x = f'Sequence: {seq_list.index(i)} (Length:{str(len(i))}) {i}'
-    print(x)
-

@@ -1,7 +1,6 @@
 # 2:
 
 class Seq:
-    """A class for representing sequences"""
     def __init__(self, strbases):
         d = ['A', 'T', 'C', 'G']
         for i in strbases:

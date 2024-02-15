@@ -1,24 +1,19 @@
-import termcolor
-
 # 1:
 class Seq:
-    """A class for representing sequences"""
     def __init__(self, strbases):
-        self.strbases = strbases
-        error = None
-        for i in self.strbases:
-            if i == 'A' or i == 'G' or i == 'T' or i == 'C':
-                error = None
+        d = ['A', 'T', 'C', 'G']
+        for i in strbases:
+            if i in d:
+                self.strbases = strbases
             else:
-                error = 1
-        if error == 1:
-            print('ERROR !!')
-            self.strbases = 'ERROR'
+                self.strbases = 'ERROR'
+        if self.strbases == 'ERROR':
+            print('ERROR!!')
         else:
-            print("New sequence created!")
+            print('A new sequence was created')
 
     def __str__(self):
-        """Method called when the object is being printed"""
+
         return self.strbases
 
     def len(self):
@@ -27,7 +22,7 @@ class Seq:
 
 s1 = Seq("AGTACACTGGT")
 s2 = Seq("Hello? Am I a valid sequence?")
-termcolor.cprint(f"Sequence 1: {s1}", 'red')
-termcolor.cprint(f"Sequence 2: {s2}", 'blue')
+print(f"Sequence 1: {s1}")
+print(f"Sequence 2: {s2}")
 
 
