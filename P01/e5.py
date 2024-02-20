@@ -21,3 +21,5 @@ count_all_bases(s2)
 print('Sequence 3:', '(Length:' + str(s3.len()) + ')', s3.is_null_sequence())
 count_all_bases(s3)
 
+
+

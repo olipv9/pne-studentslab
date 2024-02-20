@@ -16,3 +16,7 @@ print('Sequence 3:', '(Length:' + str(s3.len()) + ')', s3.is_null_sequence())
 print('\tReversed:', s3.rev_seq())
 s3.complement()
 
+
+
+
+

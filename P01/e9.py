@@ -6,3 +6,8 @@ print('Sequence:', '(Length: ' + str(s.len()) + ')', s.is_null_sequence())
 print('\tBases:', s.seq_count())
 print('\tReversed:', s.rev_seq())
 s.complement()
+
+
+
+
+

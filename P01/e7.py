@@ -11,3 +11,8 @@ print('Sequence 2:', '(Length:' + str(s2.len()) + ')', s2.is_null_sequence())
 print('Reversed:', s2.rev_seq())
 print('Sequence 3:', '(Length:' + str(s3.len()) + ')', s3.is_null_sequence())
 print('Reversed:', s3.rev_seq())
+
+
+
+
+

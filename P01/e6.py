@@ -12,3 +12,7 @@ print('Sequence 3:', '(Length:' + str(s3.len()) + ')', s3.is_null_sequence())
 print(s3.seq_count())
 
 
+
+
+
+
