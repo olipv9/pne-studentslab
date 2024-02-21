@@ -12,5 +12,3 @@ Seq('ACTGA')
 print_seqs('ACTGA')
 
 
-
-

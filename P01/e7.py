@@ -14,5 +14,3 @@ print('Reversed:', s3.rev_seq())
 
 
 
-
-
