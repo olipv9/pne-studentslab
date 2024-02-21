@@ -10,3 +10,5 @@ def print_seqs(seq):
 
 Seq('ACTGA')
 print_seqs('ACTGA')
+
+
