@@ -12,17 +12,17 @@ class Seq:
             self.strbases = strbases
             if self.strbases == strbases and strbases != "":
                 print('A new sequence was created!')
+            else:
+                self.strbases = 'NULL'
+                print(' Null sequence was created!')
+                self.valid_sequence = False
+
 
     def __str__(self):
         return self.strbases
 
     def len(self):
-        return '0' if self.strbases == 'ERROR!' else len(self.strbases)
-
-    def is_null_sequence(self):
-        if self.strbases == '' and self.valid_sequence:
-            print('Null sequence created.')
-        return 'NULL' if self.strbases == '' else self.strbases
+        return '0' if not self.valid_sequence else len(self.strbases)
 
     def rev_seq(self):
         if self.strbases == 'ERROR!' or self.strbases == 'NULL':
@@ -48,6 +48,7 @@ class Seq:
             print('\tComplementary: NULL')
 
     def read_fasta(self, filename):
+        self.valid_sequence = True
         try:
             with open(filename, 'r') as file:
                 lines = file.readlines()
@@ -93,5 +94,4 @@ class Seq:
                 highest = val
                 name = key
         return name
-
 
