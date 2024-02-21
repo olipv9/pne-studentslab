@@ -5,7 +5,6 @@ final_name_list = ['Gene U5:', 'Gene ADA:', 'Gene FRAT1:', 'Gene FXN:', 'Gene RN
 
 for i in filenames:
     s = Seq()
-    s.is_null_sequence()
     s.read_fasta(i)
     num = filenames.index(i)
     print(final_name_list[num], 'Most frequent Base:', s.most_freq_base())
