@@ -12,7 +12,7 @@ class Client:
     def __str__(self):
         return f'Connection to SERVER at {self.ip}, at PORT {self.port}'
 
-    def talk(self, msg):
+    def talk(self, msg=None):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((self.ip, self.port))
         s.send(str.encode(msg))  # Send data.
