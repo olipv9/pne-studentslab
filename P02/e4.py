@@ -1,7 +1,7 @@
 from Seq1 import Seq
 from Client0 import Client
 import termcolor
-IP = "212.128.255.39"
+IP = "212.128.255.75"
 PORT = 8081
 s = Seq()
 c = Client(IP, PORT)
