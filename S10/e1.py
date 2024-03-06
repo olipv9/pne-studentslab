@@ -1,7 +1,7 @@
 import socket
 
 PORT = 8080
-IP = "212.128.255.75"
+IP = "127.0.0.1"
 
 ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # -- Optional: This is for avoiding the problem of Port already in use
