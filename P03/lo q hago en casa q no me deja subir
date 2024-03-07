@@ -1,8 +1,16 @@
 import socket
 import termcolor
 from seq1 import Seq
-from Seq1 import percentages
+from seq1 import percentages # HE AÑADIDO UNA FUNCIÓN EXTRA EN ESE DOC- LA PEGO AQUÍ
+def percentages(seq):
+    dict_bases_num = seq.seq_count()
+    dict_bases_average = {}
+    for base, num in dict_bases_num.items():
+        average = (num * 100) / s.len()
+        average = round(average, 2)
+        print(f'{base}: {num} ({average}%)')
 
+_______________________________________________________
 PORT = 8080
 IP = "127.0.0.1"
 sequences = ['AGAGATAGATATAGSGSCCAGATAGACAGA','CGCGCGCTAGATAGAGCAGAATAGACAGATATAGA','ACACACACACGATATGACAGAGATAGACAAGATAG','AGACAGATAGACAGTTGGACGTCGCTCG']
@@ -75,4 +83,6 @@ while True:
             comp_s = Seq(seq)
             comp_s.complement()
             cs.send(comp_s.complement().encode())
+
+
 
