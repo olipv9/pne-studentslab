@@ -1,9 +1,11 @@
 import socket
 import termcolor
+from seq1 import Seq
+from Seq1 import percentages
+
 PORT = 8080
 IP = "127.0.0.1"
 sequences = ['AGAGATAGATATAGSGSCCAGATAGACAGA','CGCGCGCTAGATAGAGCAGAATAGACAGATATAGA','ACACACACACGATATGACAGAGATAGACAAGATAG','AGACAGATAGACAGTTGGACGTCGCTCG']
-
 
 ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Optional: for avoiding the problem of Port already in use
@@ -57,6 +59,19 @@ while True:
                 print('No valid number given')
                 response = f'No valid number given'
                 cs.send(response.encode())
+        elif msg.startswith('INFO'):
+            (info, seq) = msg.split(' ')
+            termcolor.cprint('INFO', 'yellow')
+            s = Seq(seq)
+            print(f'Sequence: {seq}')
+            print(f'Total Length: {s.len()}')
+            cs.send(f'Sequence: {seq}\nTotal Length: {s.len()}'.encode())
+            percentages(seq)
+            cs.send(percentages(seq).encode())
 
-        cs.close()
-
+        elif msg.startswith('COMP'):
+            seq = msg.split(' ')[1]
+            termcolor.cprint('COMP', 'yellow')
+            comp_s = Seq(seq)
+            comp_s.complement()
+            cs.send(comp_s.complement().encode())

@@ -96,3 +96,10 @@ class Seq:
         return name
 
 
+def percentages(seq):
+    dict_bases_num = seq.seq_count()
+    dict_bases_average = {}
+    for base, num in dict_bases_num.items():
+        average = (num * 100) / s.len()
+        average = round(average, 2)
+        print(f'{base}: {num} ({average}%)')
