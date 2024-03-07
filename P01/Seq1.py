@@ -103,3 +103,5 @@ def percentages(seq):
         average = (num * 100) / s.len()
         average = round(average, 2)
         print(f'{base}: {num} ({average}%)')
+
+

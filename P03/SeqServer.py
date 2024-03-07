@@ -75,3 +75,4 @@ while True:
             comp_s = Seq(seq)
             comp_s.complement()
             cs.send(comp_s.complement().encode())
+
