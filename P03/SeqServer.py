@@ -1,6 +1,6 @@
 import socket
 import termcolor
-from seq1 import Seq
+from Seq1 import Seq
 from Seq1 import percentages
 
 PORT = 8080
@@ -76,3 +76,22 @@ while True:
             comp_s.complement()
             cs.send(comp_s.complement().encode())
 
+        elif msg.startswith('REV'):
+            seq = msg.split(' ')[1]
+            termcolor.cprint('REV', 'yellow')
+            rev_s = Seq(seq)
+            print(rev_s.rev_seq())
+            cs.send(rev_s.rev_seq().encode())
+
+        elif msg.startswith('GENE'):
+            file_dict = {'U5':'../sequences/U5_sequence.fa','ADA': '../sequences/ADA_sequence.fa','FRAT1' :'../sequences/FRAT1_sequence.fa','FXN': '../sequences/FXN_sequence.fa', 'RNU6_269P' :'../sequences/RNU6_269P_sequence.fa'}
+            gene_name = msg.split(' ')[1]
+            termcolor.cprint('GENE', 'yellow')
+            gene_s = Seq()
+            for i in file_dict:
+                if i == gene_name:
+                    filename = file_dict[i]
+                    break
+            gene_s.read_fasta(filename)
+            print(gene_s.read_fasta(filename))
+            cs.send(gene_s.read_fasta(filename).encode())
