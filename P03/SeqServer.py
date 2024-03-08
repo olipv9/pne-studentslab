@@ -1,7 +1,7 @@
 import socket
 import termcolor
 from Seq1P03 import Seq
-from Seq1P03 import percentages
+
 
 PORT = 8080
 IP = "127.0.0.1"
@@ -9,9 +9,9 @@ sequences = ['AGAACAGATAGACCCCAGATAGACAGTTG','AGAGATAGATATAGSGSCCAGATAGACAGA','C
 
 # Create functions:
 def get_function(number):
-    termcolor.cprint(f'GET\n{sequences[number]}\n', 'yellow')
-    response = f"{sequences[number]}\n"
-    cs.send(response.encode())
+    termcolor.cprint(f'GET\nGET {number}: {sequences[number]}\n', 'yellow')
+    response = f"GET {number}: {sequences[number]}\n"
+    cs.send(f'Testing Get...\n{response}'.encode())
 
 # Create the socket
 ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -45,9 +45,9 @@ while True:
         if msg == 'PING' or msg.startswith('PING'): #  Ping function
             print(f"PING command!\nOK!\n")
             response = f"OK!\n"
-            cs.send(response.encode())
+            cs.send(f'Testing Ping...\n{response}'.encode())
 
-        elif msg.startswith('GET'):  # Get function
+        elif msg.startswith('GET'): # Get function
             msg = msg.split(' ')
             if msg[1] == '0':
                 number_chosen = 0
@@ -73,23 +73,27 @@ while True:
             print(f'Sequence: {seq}')
             print(f'Total Length: {s.len()}')
             cs.send(f'Sequence: {seq}\nTotal Length: {s.len()}'.encode())
-            percentages(seq)
-            cs.send(percentages(seq).encode())
+            dict_bases_num = s.seq_count()
+            for base, num in dict_bases_num.items():
+                average = (num * 100) / s.len()
+                average = round(average, 2)
+                print(f'{base}: {num} ({average}%)')
+                cs.send(f'Testing Info...\n{base}: {num} ({average}%)'.encode())
 
         elif msg.startswith('COMP'): # Comp function
             seq = msg.split(' ')[1]
             termcolor.cprint('COMP\n', 'yellow')
             comp_s = Seq(seq)
             final_comp_seq = comp_s.complement()
-            print(final_comp_seq)
-            cs.send(final_comp_seq.encode())
+            print(f'- Seq: {comp_s}\n- Complementary seq: {final_comp_seq}\n')
+            cs.send(f'Testing Comp...\n- Seq: {comp_s}\n- Complementary seq: {final_comp_seq}'.encode())
 
         elif msg.startswith('REV'): #  Reverse function
             seq = msg.split(' ')[1]
             termcolor.cprint('REV\n', 'yellow')
             rev_s = Seq(seq)
-            print(f'{rev_s.rev_seq()}\n')
-            cs.send(rev_s.rev_seq().encode())
+            print(f'- Seq: {rev_s}\n- Reversed seq: {rev_s.rev_seq()}\n')
+            cs.send(f'Testing Rev...\n- Seq: {rev_s}\n- Reversed seq: {rev_s.rev_seq()}\n'.encode())
 
         elif msg.startswith('GENE'): #  Gene function
             file_dict = {'U5':'../sequences/U5_sequence.fa','ADA': '../sequences/ADA_sequence.fa','FRAT1' :'../sequences/FRAT1_sequence.fa','FXN': '../sequences/FXN_sequence.fa', 'RNU6_269P' :'../sequences/RNU6_269P_sequence.fa'}
@@ -101,8 +105,8 @@ while True:
                     filename = file_dict[i]
                     break
             gene_s.read_fasta(filename)
-            print(f'{gene_s.read_fasta(filename)}\n')
-            cs.send(gene_s.read_fasta(filename).encode())
+            print(f'Gene {gene_name}: {gene_s.read_fasta(filename)}\n')
+            cs.send(f'Testing Gene...\nGene {gene_name}: {gene_s.read_fasta(filename)}\n'.encode())
 
 
 

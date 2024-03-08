@@ -101,4 +101,7 @@ def percentages(seq):
     for base, num in dict_bases_num.items():
         average = (num * 100) / s.len()
         average = round(average, 2)
-        print(f'{base}: {num} ({average}%)')
+        dict_bases_average[base] = average
+        # print(f'{base}: {num} ({average}%)')
+    return dict_bases_average
+
