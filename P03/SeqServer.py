@@ -5,8 +5,15 @@ from Seq1P03 import percentages
 
 PORT = 8080
 IP = "127.0.0.1"
-sequences = ['AGAGATAGATATAGSGSCCAGATAGACAGA','CGCGCGCTAGATAGAGCAGAATAGACAGATATAGA','ACACACACACGATATGACAGAGATAGACAAGATAG','AGACAGATAGACAGTTGGACGTCGCTCG']
+sequences = ['AGAACAGATAGACCCCAGATAGACAGTTG','AGAGATAGATATAGSGSCCAGATAGACAGA','CGCGCGCTAGATAGAGCAGAATAGACAGATATAGA','ACACACACACGATATGACAGAGATAGACAAGATAG','AGACAGATAGACAGTTGGACGTCGCTCG']
 
+# Create functions:
+def get_function(number):
+    termcolor.cprint(f'GET\n{sequences[number]}\n', 'yellow')
+    response = f"{sequences[number]}\n"
+    cs.send(response.encode())
+
+# Create the socket
 ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Optional: for avoiding the problem of Port already in use
 ls.bind((IP, PORT))
@@ -26,42 +33,42 @@ while True:
         # -- Close the listening socket
         ls.close()
         exit()
-
+    except socket.error:
+        print('There has been a problem with the socket.')
+        ls.close()
+        exit()
     # -- Execute this part if there are no errors
     else:
-        num = 0
         print("A client has connected to the server!")
         msg_raw = cs.recv(2048)
         msg = msg_raw.decode()
-        if msg == 'PING' or msg.startswith('PING'):
+        if msg == 'PING' or msg.startswith('PING'): #  Ping function
             print(f"PING command!\nOK!\n")
             response = f"OK!\n"
             cs.send(response.encode())
-        elif msg.startswith('GET'):
+
+        elif msg.startswith('GET'):  # Get function
             msg = msg.split(' ')
-            if msg[1] == '1':
-                termcolor.cprint(f'GET\n{sequences[0]}','yellow')
-                response = f"{sequences[0]}"
-                cs.send(response.encode())
+            if msg[1] == '0':
+                number_chosen = 0
+            elif msg[1] == '1':
+                number_chosen = 1
             elif msg[1] == '2':
-                termcolor.cprint(f'GET\n{sequences[1]}','yellow')
-                response = f"{sequences[1]}"
-                cs.send(response.encode())
+                number_chosen = 2
             elif msg[1] == '3':
-                termcolor.cprint(f'GET\n{sequences[2]}','yellow')
-                response = f"{sequences[2]}"
-                cs.send(response.encode())
+                number_chosen = 3
             elif msg[1] == '4':
-                termcolor.cprint(f'GET\n{sequences[3]}','yellow')
-                response = f"{sequences[3]}"
-                cs.send(response.encode())
+                number_chosen = 4
+            if 0 <= number_chosen <= 4:
+                get_function(number_chosen)
             else:
                 print('No valid number given')
-                response = f'No valid number given'
+                response = f'No valid number given\n'
                 cs.send(response.encode())
-        elif msg.startswith('INFO'):
+
+        elif msg.startswith('INFO'): #  Info function
             (info, seq) = msg.split(' ')
-            termcolor.cprint('INFO', 'yellow')
+            termcolor.cprint('INFO\n', 'yellow')
             s = Seq(seq)
             print(f'Sequence: {seq}')
             print(f'Total Length: {s.len()}')
@@ -69,32 +76,32 @@ while True:
             percentages(seq)
             cs.send(percentages(seq).encode())
 
-        elif msg.startswith('COMP'):
+        elif msg.startswith('COMP'): # Comp function
             seq = msg.split(' ')[1]
-            termcolor.cprint('COMP', 'yellow')
+            termcolor.cprint('COMP\n', 'yellow')
             comp_s = Seq(seq)
             final_comp_seq = comp_s.complement()
             print(final_comp_seq)
             cs.send(final_comp_seq.encode())
 
-        elif msg.startswith('REV'):
+        elif msg.startswith('REV'): #  Reverse function
             seq = msg.split(' ')[1]
-            termcolor.cprint('REV', 'yellow')
+            termcolor.cprint('REV\n', 'yellow')
             rev_s = Seq(seq)
-            print(rev_s.rev_seq())
+            print(f'{rev_s.rev_seq()}\n')
             cs.send(rev_s.rev_seq().encode())
 
-        elif msg.startswith('GENE'):
+        elif msg.startswith('GENE'): #  Gene function
             file_dict = {'U5':'../sequences/U5_sequence.fa','ADA': '../sequences/ADA_sequence.fa','FRAT1' :'../sequences/FRAT1_sequence.fa','FXN': '../sequences/FXN_sequence.fa', 'RNU6_269P' :'../sequences/RNU6_269P_sequence.fa'}
             gene_name = msg.split(' ')[1]
-            termcolor.cprint('GENE', 'yellow')
+            termcolor.cprint('GENE\n', 'yellow')
             gene_s = Seq()
             for i in file_dict:
                 if i == gene_name:
                     filename = file_dict[i]
                     break
             gene_s.read_fasta(filename)
-            print(gene_s.read_fasta(filename))
+            print(f'{gene_s.read_fasta(filename)}\n')
             cs.send(gene_s.read_fasta(filename).encode())
 
 
