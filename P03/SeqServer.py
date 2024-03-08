@@ -1,7 +1,7 @@
 import socket
 import termcolor
-from Seq1 import Seq
-from Seq1 import percentages
+from Seq1P03 import Seq
+from Seq1P03 import percentages
 
 PORT = 8080
 IP = "127.0.0.1"
@@ -73,8 +73,9 @@ while True:
             seq = msg.split(' ')[1]
             termcolor.cprint('COMP', 'yellow')
             comp_s = Seq(seq)
-            comp_s.complement()
-            cs.send(comp_s.complement().encode())
+            final_comp_seq = comp_s.complement()
+            print(final_comp_seq)
+            cs.send(final_comp_seq.encode())
 
         elif msg.startswith('REV'):
             seq = msg.split(' ')[1]
@@ -95,3 +96,11 @@ while True:
             gene_s.read_fasta(filename)
             print(gene_s.read_fasta(filename))
             cs.send(gene_s.read_fasta(filename).encode())
+
+
+
+
+
+
+
+

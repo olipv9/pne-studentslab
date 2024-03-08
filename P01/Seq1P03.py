@@ -37,15 +37,14 @@ class Seq:
         for i in self.strbases:
             if i in complementary_bases.keys():
                 final_list.append(complementary_bases[i])
-        if final_list:
-            print('\tComplementary: ', end='')
-            for i in final_list:
-                print(i, end='')
-            print(end='\n')
-        elif self.strbases == 'ERROR!':
-            print('\tComplementary: ', self.strbases)
+        if not final_list:
+            if self.strbases == 'ERROR!':
+                final_answer = f'Complementary: {self.strbases}'
+            else:
+                final_answer = f'Complementary: NULL'
         else:
-            print('\tComplementary: NULL')
+            final_answer = ''.join(final_list)
+        return final_answer
 
     def read_fasta(self, filename):
         self.valid_sequence = True
@@ -96,4 +95,10 @@ class Seq:
         return name
 
 
-
+def percentages(seq):
+    dict_bases_num = seq.seq_count()
+    dict_bases_average = {}
+    for base, num in dict_bases_num.items():
+        average = (num * 100) / s.len()
+        average = round(average, 2)
+        print(f'{base}: {num} ({average}%)')
