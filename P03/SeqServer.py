@@ -5,13 +5,22 @@ from Seq1P03 import Seq
 
 PORT = 8080
 IP = "127.0.0.1"
-sequences = ['AGAACAGATAGACCCCAGATAGACAGTTG','AGAGATAGATATAGSGSCCAGATAGACAGA','CGCGCGCTAGATAGAGCAGAATAGACAGATATAGA','ACACACACACGATATGACAGAGATAGACAAGATAG','AGACAGATAGACAGTTGGACGTCGCTCG']
+sequences = ['AGAACAGATAGACCCCAGATAGACAGTTG', 'AGAGATAGATATAGSGSCCAGATAGACAG', 'CGCGCGCTAGATAGAGCAGAATAGACAGA',
+             'ACACACACACGATATGACAGAGATAGACA', 'AGACAGATAGACAGTTGGACGTCGCTCGA']
 
 # Create functions:
 def get_function(number):
     termcolor.cprint(f'GET\nGET {number}: {sequences[number]}\n', 'yellow')
     response = f"GET {number}: {sequences[number]}\n"
     cs.send(f'Testing Get...\n{response}'.encode())
+
+
+def get_average(dic_of_bases,base):
+    num = dic_of_bases[base]
+    average = (num * 100) / s.len()
+    average = round(average, 2)
+    return average, num
+
 
 # Create the socket
 ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -42,12 +51,12 @@ while True:
         print("A client has connected to the server!")
         msg_raw = cs.recv(2048)
         msg = msg_raw.decode()
-        if msg == 'PING' or msg.startswith('PING'): #  Ping function
+        if msg == 'PING' or msg.startswith('PING'):  #  Ping function
             print(f"PING command!\nOK!\n")
             response = f"OK!\n"
             cs.send(f'Testing Ping...\n{response}'.encode())
 
-        elif msg.startswith('GET'): # Get function
+        elif msg.startswith('GET'):  # Get function
             msg = msg.split(' ')
             if msg[1] == '0':
                 number_chosen = 0
@@ -65,20 +74,26 @@ while True:
                 print('No valid number given')
                 response = f'No valid number given\n'
                 cs.send(response.encode())
-
-        elif msg.startswith('INFO'): #  Info function
-            (info, seq) = msg.split(' ')
-            termcolor.cprint('INFO\n', 'yellow')
-            s = Seq(seq)
-            print(f'Sequence: {seq}')
-            print(f'Total Length: {s.len()}')
-            cs.send(f'Sequence: {seq}\nTotal Length: {s.len()}'.encode())
-            dict_bases_num = s.seq_count()
-            for base, num in dict_bases_num.items():
-                average = (num * 100) / s.len()
-                average = round(average, 2)
-                print(f'{base}: {num} ({average}%)')
-                cs.send(f'Testing Info...\n{base}: {num} ({average}%)'.encode())
+        elif msg.startswith('INFO'):  # Info function
+            try:
+                (info, seq) = msg.split(' ')
+                termcolor.cprint('INFO\n', 'yellow')
+                s = Seq(seq)
+                print(f'Sequence: {seq}')
+                print(f'Total Length: {s.len()}')
+                info_send = f'Testing info...\nSequence: {seq}\nTotal Length: {s.len()}\n'
+                dict_bases_num = s.seq_count()
+                a_average, num_a = get_average(dict_bases_num, 'A')
+                g_average, num_g = get_average(dict_bases_num, 'G')
+                t_average, num_t = get_average(dict_bases_num, 'T')
+                c_average, num_c = get_average(dict_bases_num, 'C')
+                print(f'A: {num_a} ({a_average}%)\nG: {num_g} ({g_average}%)\nT: {num_t} ({t_average}%)\nC: {num_c} '
+                      f'({c_average}%)\n ')
+                cs.send((f'{info_send}A: {num_a} ({a_average}%)\nG: {num_g} ({g_average}%)\nT: {num_t} ({t_average}%)\n'
+                         f'C: {num_c} ({c_average}%)\n ').encode())
+            except Exception as e:
+                print(f"An error occurred: {e}")
+                cs.close()
 
         elif msg.startswith('COMP'): # Comp function
             seq = msg.split(' ')[1]
