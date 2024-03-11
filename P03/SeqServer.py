@@ -2,11 +2,11 @@ import socket
 import termcolor
 from Seq1P03 import Seq
 
-
 PORT = 8080
 IP = "127.0.0.1"
 sequences = ['AGAACAGATAGACCCCAGATAGACAGTTG', 'AGAGATAGATATAGSGSCCAGATAGACAG', 'CGCGCGCTAGATAGAGCAGAATAGACAGA',
              'ACACACACACGATATGACAGAGATAGACA', 'AGACAGATAGACAGTTGGACGTCGCTCGA']
+
 
 # Create functions:
 def get_function(number):
@@ -15,11 +15,22 @@ def get_function(number):
     cs.send(f'Testing Get...\n{response}'.encode())
 
 
-def get_average(dic_of_bases,base):
+def get_average(dic_of_bases, base):
     num = dic_of_bases[base]
     average = (num * 100) / s.len()
     average = round(average, 2)
     return average, num
+
+def check_for_seq_errors(seq):
+    seq = seq.upper()
+    seq_bases = ['A', 'C', 'G', 'T']
+    valid = True
+    for i in seq:
+        if i not in seq_bases:
+            print(f'The sequence given {seq} is not valid due to invalid characters.')
+            valid = False
+            break
+    return valid
 
 
 # Create the socket
@@ -51,7 +62,7 @@ while True:
         print("A client has connected to the server!")
         msg_raw = cs.recv(2048)
         msg = msg_raw.decode()
-        if msg == 'PING' or msg.startswith('PING'):  #  Ping function
+        if msg == 'PING' or msg.startswith('PING'):  # Ping function
             print(f"PING command!\nOK!\n")
             response = f"OK!\n"
             cs.send(f'Testing Ping...\n{response}'.encode())
@@ -95,7 +106,7 @@ while True:
                 print(f"An error occurred: {e}")
                 cs.close()
 
-        elif msg.startswith('COMP'): # Comp function
+        elif msg.startswith('COMP'):  # Comp function
             seq = msg.split(' ')[1]
             termcolor.cprint('COMP\n', 'yellow')
             comp_s = Seq(seq)
@@ -103,15 +114,17 @@ while True:
             print(f'- Seq: {comp_s}\n- Complementary seq: {final_comp_seq}\n')
             cs.send(f'Testing Comp...\n- Seq: {comp_s}\n- Complementary seq: {final_comp_seq}'.encode())
 
-        elif msg.startswith('REV'): #  Reverse function
+        elif msg.startswith('REV'):  # Reverse function
             seq = msg.split(' ')[1]
             termcolor.cprint('REV\n', 'yellow')
             rev_s = Seq(seq)
             print(f'- Seq: {rev_s}\n- Reversed seq: {rev_s.rev_seq()}\n')
             cs.send(f'Testing Rev...\n- Seq: {rev_s}\n- Reversed seq: {rev_s.rev_seq()}\n'.encode())
 
-        elif msg.startswith('GENE'): #  Gene function
-            file_dict = {'U5':'../sequences/U5_sequence.fa','ADA': '../sequences/ADA_sequence.fa','FRAT1' :'../sequences/FRAT1_sequence.fa','FXN': '../sequences/FXN_sequence.fa', 'RNU6_269P' :'../sequences/RNU6_269P_sequence.fa'}
+        elif msg.startswith('GENE'):  # Gene function
+            file_dict = {'U5': '../sequences/U5_sequence.fa', 'ADA': '../sequences/ADA_sequence.fa',
+                         'FRAT1': '../sequences/FRAT1_sequence.fa', 'FXN': '../sequences/FXN_sequence.fa',
+                         'RNU6_269P': '../sequences/RNU6_269P_sequence.fa'}
             gene_name = msg.split(' ')[1]
             termcolor.cprint('GENE\n', 'yellow')
             gene_s = Seq()
@@ -122,11 +135,3 @@ while True:
             gene_s.read_fasta(filename)
             print(f'Gene {gene_name}: {gene_s.read_fasta(filename)}\n')
             cs.send(f'Testing Gene...\nGene {gene_name}: {gene_s.read_fasta(filename)}\n'.encode())
-
-
-
-
-
-
-
-
