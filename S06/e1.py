@@ -7,6 +7,7 @@ class Seq:
                 self.strbases = strbases
             else:
                 self.strbases = 'ERROR'
+                break
         if self.strbases == 'ERROR':
             print('ERROR!!')
         else:

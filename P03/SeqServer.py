@@ -96,8 +96,8 @@ while True:
                     print(f'Total Length: {s.len()}')
                     info_send = f'Testing info...\nSequence: {seq}\nTotal Length: {s.len()}\n'
                     dict_bases_num = s.seq_count()
-                    a_average, num_a = get_average(dict_bases_num,s, 'A')
-                    g_average, num_g = get_average(dict_bases_num, s,'G')
+                    a_average, num_a = get_average(dict_bases_num, s, 'A')
+                    g_average, num_g = get_average(dict_bases_num, s, 'G')
                     t_average, num_t = get_average(dict_bases_num, s, 'T')
                     c_average, num_c = get_average(dict_bases_num, s, 'C')
                     print(f'A: {num_a} ({a_average}%)\nG: {num_g} ({g_average}%)\nT: {num_t} ({t_average}%)\nC: {num_c} '
