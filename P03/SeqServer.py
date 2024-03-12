@@ -145,3 +145,4 @@ while True:
         else:
             print(f'The option chosen ({msg}) was not between the ofered ones.')
             cs.send(f'The option chosen ({msg}) was not between the ofered ones.'.encode())
+            cs.close()
