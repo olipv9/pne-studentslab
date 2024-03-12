@@ -21,6 +21,6 @@ try:
     message.talk("GENE ADA")
     message.talk("GENE FXN")
     message.talk("GENE RNU6_269P")
-except Exception:
-    print('Something went wrong.')
+except Exception as e:
+    print(f'Something went wrong: {e}')
 

@@ -9,12 +9,12 @@ sequences = ['AGAACAGATAGACCCCAGATAGACAGTTG', 'AGAGATAGATATAGSGSCCAGATAGACAG', '
 
 
 # Create functions:
-def get_function(number):
+def get_function(number,cs):
     termcolor.cprint(f'GET\nGET {number}: {sequences[number]}\n', 'yellow')
     response = f"GET {number}: {sequences[number]}\n"
     cs.send(f'Testing Get...\n{response}'.encode())
 
-def get_average(dic_of_bases, base):
+def get_average(dic_of_bases,s, base):
     num = dic_of_bases[base]
     average = (num * 100) / s.len()
     average = round(average, 2)
@@ -79,7 +79,7 @@ while True:
             elif msg[1] == '4':
                 number_chosen = 4
             if 0 <= number_chosen <= 4:
-                get_function(number_chosen)
+                get_function(number_chosen,cs)
             else:
                 print('No valid number given')
                 response = f'No valid number given\n'
@@ -96,10 +96,10 @@ while True:
                     print(f'Total Length: {s.len()}')
                     info_send = f'Testing info...\nSequence: {seq}\nTotal Length: {s.len()}\n'
                     dict_bases_num = s.seq_count()
-                    a_average, num_a = get_average(dict_bases_num, 'A')
-                    g_average, num_g = get_average(dict_bases_num, 'G')
-                    t_average, num_t = get_average(dict_bases_num, 'T')
-                    c_average, num_c = get_average(dict_bases_num, 'C')
+                    a_average, num_a = get_average(dict_bases_num,s, 'A')
+                    g_average, num_g = get_average(dict_bases_num, s,'G')
+                    t_average, num_t = get_average(dict_bases_num, s, 'T')
+                    c_average, num_c = get_average(dict_bases_num, s, 'C')
                     print(f'A: {num_a} ({a_average}%)\nG: {num_g} ({g_average}%)\nT: {num_t} ({t_average}%)\nC: {num_c} '
                           f'({c_average}%)\n ')
                     cs.send((f'{info_send}A: {num_a} ({a_average}%)\nG: {num_g} ({g_average}%)\nT: {num_t} ({t_average}%)\n'
