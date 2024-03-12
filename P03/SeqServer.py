@@ -14,7 +14,6 @@ def get_function(number):
     response = f"GET {number}: {sequences[number]}\n"
     cs.send(f'Testing Get...\n{response}'.encode())
 
-
 def get_average(dic_of_bases, base):
     num = dic_of_bases[base]
     average = (num * 100) / s.len()
@@ -85,41 +84,48 @@ while True:
                 print('No valid number given')
                 response = f'No valid number given\n'
                 cs.send(response.encode())
+
         elif msg.startswith('INFO'):  # Info function
             try:
                 (info, seq) = msg.split(' ')
-                termcolor.cprint('INFO\n', 'yellow')
-                s = Seq(seq)
-                print(f'Sequence: {seq}')
-                print(f'Total Length: {s.len()}')
-                info_send = f'Testing info...\nSequence: {seq}\nTotal Length: {s.len()}\n'
-                dict_bases_num = s.seq_count()
-                a_average, num_a = get_average(dict_bases_num, 'A')
-                g_average, num_g = get_average(dict_bases_num, 'G')
-                t_average, num_t = get_average(dict_bases_num, 'T')
-                c_average, num_c = get_average(dict_bases_num, 'C')
-                print(f'A: {num_a} ({a_average}%)\nG: {num_g} ({g_average}%)\nT: {num_t} ({t_average}%)\nC: {num_c} '
-                      f'({c_average}%)\n ')
-                cs.send((f'{info_send}A: {num_a} ({a_average}%)\nG: {num_g} ({g_average}%)\nT: {num_t} ({t_average}%)\n'
-                         f'C: {num_c} ({c_average}%)\n ').encode())
+                valid_seq = check_for_seq_errors(seq)
+                if valid_seq:
+                    termcolor.cprint('INFO\n', 'yellow')
+                    s = Seq(seq)
+                    print(f'Sequence: {seq}')
+                    print(f'Total Length: {s.len()}')
+                    info_send = f'Testing info...\nSequence: {seq}\nTotal Length: {s.len()}\n'
+                    dict_bases_num = s.seq_count()
+                    a_average, num_a = get_average(dict_bases_num, 'A')
+                    g_average, num_g = get_average(dict_bases_num, 'G')
+                    t_average, num_t = get_average(dict_bases_num, 'T')
+                    c_average, num_c = get_average(dict_bases_num, 'C')
+                    print(f'A: {num_a} ({a_average}%)\nG: {num_g} ({g_average}%)\nT: {num_t} ({t_average}%)\nC: {num_c} '
+                          f'({c_average}%)\n ')
+                    cs.send((f'{info_send}A: {num_a} ({a_average}%)\nG: {num_g} ({g_average}%)\nT: {num_t} ({t_average}%)\n'
+                             f'C: {num_c} ({c_average}%)\n ').encode())
             except Exception as e:
                 print(f"An error occurred: {e}")
                 cs.close()
 
         elif msg.startswith('COMP'):  # Comp function
             seq = msg.split(' ')[1]
-            termcolor.cprint('COMP\n', 'yellow')
-            comp_s = Seq(seq)
-            final_comp_seq = comp_s.complement()
-            print(f'- Seq: {comp_s}\n- Complementary seq: {final_comp_seq}\n')
-            cs.send(f'Testing Comp...\n- Seq: {comp_s}\n- Complementary seq: {final_comp_seq}'.encode())
+            valid_seq = check_for_seq_errors(seq)
+            if valid_seq:
+                termcolor.cprint('COMP\n', 'yellow')
+                comp_s = Seq(seq)
+                final_comp_seq = comp_s.complement()
+                print(f'- Seq: {comp_s}\n- Complementary seq: {final_comp_seq}\n')
+                cs.send(f'Testing Comp...\n- Seq: {comp_s}\n- Complementary seq: {final_comp_seq}'.encode())
 
         elif msg.startswith('REV'):  # Reverse function
             seq = msg.split(' ')[1]
-            termcolor.cprint('REV\n', 'yellow')
-            rev_s = Seq(seq)
-            print(f'- Seq: {rev_s}\n- Reversed seq: {rev_s.rev_seq()}\n')
-            cs.send(f'Testing Rev...\n- Seq: {rev_s}\n- Reversed seq: {rev_s.rev_seq()}\n'.encode())
+            valid_seq = check_for_seq_errors(seq)
+            if valid_seq:
+                termcolor.cprint('REV\n', 'yellow')
+                rev_s = Seq(seq)
+                print(f'- Seq: {rev_s}\n- Reversed seq: {rev_s.rev_seq()}\n')
+                cs.send(f'Testing Rev...\n- Seq: {rev_s}\n- Reversed seq: {rev_s.rev_seq()}\n'.encode())
 
         elif msg.startswith('GENE'):  # Gene function
             file_dict = {'U5': '../sequences/U5_sequence.fa', 'ADA': '../sequences/ADA_sequence.fa',
@@ -134,4 +140,8 @@ while True:
                     break
             gene_s.read_fasta(filename)
             print(f'Gene {gene_name}: {gene_s.read_fasta(filename)}\n')
-            cs.send(f'Testing Gene...\nGene {gene_name}: {gene_s.read_fasta(filename)}\n'.encode())
+            cs.send(f'Testing Gene...\nGene {gene_name}: {gene_s.read_fasta(filename)}'.encode())
+
+        else:
+            print(f'The option chosen ({msg}) was not between the ofered ones.')
+            cs.send(f'The option chosen ({msg}) was not between the ofered ones.'.encode())
