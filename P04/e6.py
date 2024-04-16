@@ -20,7 +20,7 @@ def process_client4(s):
 
     # -- The request line is the first
     req_line = lines[0]
-
+    x = req_line.split(' ')[1] == '/'
     print("Request line: ", end="")
     termcolor.cprint(req_line, "green")
 
@@ -31,17 +31,16 @@ def process_client4(s):
     # blank line
     # Body (content to send)
     # This new contents are written in HTML language
-    if req_line.split('/')[2].startswith('A'):
+    if req_line.split(' ')[1] == '/info/A':
         body = Path('html/info/A.html').read_text()
-    elif req_line.split('/')[2].startswith('C'):
+    elif req_line.split(' ')[1] == '/info/C':
         body = Path('html/info/C.html').read_text()
-    elif req_line.split('/')[2].startswith('T'):
+    elif req_line.split(' ')[1] == '/info/T':
         body = Path('html/info/T.html').read_text()
-    elif req_line.split('/')[2].startswith('G'):
+    elif req_line.split(' ')[1] == '/info/G':
         body = Path('html/info/G.html').read_text()
     elif req_line.split(' ')[1] == '/':
         body = Path('html/info/index.html').read_text()
-
     else:
         body = Path('html/info/error.html').read_text()
 
