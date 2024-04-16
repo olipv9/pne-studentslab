@@ -7,7 +7,7 @@ IP = "127.0.0.1"
 PORT = 8080
 
 
-def process_client3(s):
+def process_client4(s):
     # -- Receive the request message
     req_raw = s.recv(2000)
     req = req_raw.decode()
@@ -62,8 +62,47 @@ def process_client3(s):
       </body>
     </html>
         """
+    elif req_line.split('/')[2].startswith('T'):
+        body = '''<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Thymine<3</title>
+  </head>
+  <body style="background-color: lightpink;">
+    <h1>Thymine</h1>
+    <p>Letter: T</p>
+    <p>Chemical formula: C5H6N2O2 </p>
+    <a href="https://en.wikipedia.org/wiki/Thymine">More info</a>
+  </body>
+</html>'''
+    elif req_line.split('/')[2].startswith('G'):
+        body = '''<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Guanine<3</title>
+  </head>
+  <body style="background-color: turquoise;">
+    <h1>Guanine</h1>
+    <p>Letter: G</p>
+    <p>Chemical formula: C5H5N5O</p>
+    <a href="https://en.wikipedia.org/wiki/Guanine">More info</a>
+  </body>
+</html>'''
+
     else:
-        body = ''
+        body = '''<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Error</title>
+  </head>
+  <body style="background-color: red;">
+    <h1>ERROR</h1>
+    <p>Resource not available</p>
+  </body>
+</html>'''
 
     # -- Status line: We respond that everything is ok (200 code)
     status_line = "HTTP/1.1 200 OK\n"
@@ -107,11 +146,8 @@ while True:
     else:
 
         # Service the client
-        process_client3(cs)
+        process_client4(cs)
 
         # -- Close the socket
         cs.close()
-
-
-
 

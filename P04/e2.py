@@ -38,7 +38,7 @@ def process_client(s):
         <meta charset="utf-8">
         <title>Adenine<3</title>
       </head>
-      <body style="background-color: lightpink;">
+      <body style="background-color: lightgreen;">
         <h1>Adenine</h1>
         <p>Letter: A</p>
         <p>Chemical formula: C5H5N5</p>
@@ -77,7 +77,7 @@ ls.bind((IP, PORT))
 # -- Become a listening socket
 ls.listen()
 
-print("Pink server configured!")
+print("Green server configured!")
 
 # --- MAIN LOOP
 while True:
