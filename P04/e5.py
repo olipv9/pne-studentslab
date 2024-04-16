@@ -39,9 +39,6 @@ def process_client4(s):
         body = Path('html/info/T.html').read_text()
     elif req_line.split('/')[2].startswith('G'):
         body = Path('html/info/G.html').read_text()
-    elif req_line.split(' ')[1] == '/':
-        body = Path('html/info/index.html').read_text()
-
     else:
         body = Path('html/info/error.html').read_text()
 
