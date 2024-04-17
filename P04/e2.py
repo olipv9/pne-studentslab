@@ -31,21 +31,7 @@ def process_client(s):
     # Body (content to send)
     # This new contents are written in HTML language
     if req_line.split('/')[2].startswith('A'):
-        body = """
-        <!DOCTYPE html>
-    <html lang="en" dir="ltr">
-      <head>
-        <meta charset="utf-8">
-        <title>Adenine<3</title>
-      </head>
-      <body style="background-color: lightgreen;">
-        <h1>Adenine</h1>
-        <p>Letter: A</p>
-        <p>Chemical formula: C5H5N5</p>
-        <a href="https://en.wikipedia.org/wiki/Adenine">More info</a>
-      </body>
-    </html>
-        """
+        body = Path('html/info/A.html').read_text()
     else:
         body = ''
 
