@@ -25,7 +25,19 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             if self.requestline.split(' ')[1] == '/':
                 body = Path('form-1.html').read_text()
             elif self.requestline.split(' ')[1].startswith('/echo'):
-                # como lo hago para que me redirija a la otra página PERO CON LO QUE HA ESCRITO EN EL HTML DE ANTES:
+                msg = self.requestline.split(' ')[1].split('=')[1]
+                body = '''<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>FORM 1</title>
+  </head>
+  <body>
+  <h1> Received message: <h1>
+   ''' + msg + '''  <a href="/"> <pre> Main page </pre> </a>
+    </form>
+  </body>
+</html>'''
             else:
                 body = Path('error.html').read_text()
         except FileNotFoundError:
