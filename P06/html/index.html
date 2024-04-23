@@ -8,8 +8,21 @@
     <h1>SEQ2 server </h1>
     <p>Access to the server: </p>
     <p>_____________________________________________________________________________________________________________________________________________________________</p>
-    <form action="ping">
-      Is the server alive: <br>
+    <form action="/ping">
+      Is the server alive:
       <input type="submit" value="PING"/>
+      </form>
+      <p>___________________________________________________________________________________________________________________________________________________________</p>
+    <form action="/get">
+      Get a sequence. Select a sequence number:
+      <select>
+        <option value="get">0</option>
+        <option value="get">1</option>
+        <option value="get">2</option>
+        <option value="get">3</option>
+        <option value="get">4</option>
+      </select>
+        <input type="submit" value="GET"/>
+    </form>
+  </body>
 </html>
-

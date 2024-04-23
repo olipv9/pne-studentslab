@@ -2,7 +2,6 @@ import http.server
 import socketserver
 import termcolor
 from pathlib import Path
-from blankspaces import blank_spaces
 
 # Define the Server's port
 PORT = 8080
@@ -15,8 +14,6 @@ socketserver.TCPServer.allow_reuse_address = True
 class TestHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
-        """This method is called whenever the client invokes the GET method
-        in the HTTP protocol request"""
 
         # Print the request line
         termcolor.cprint(self.requestline, 'green')
@@ -26,18 +23,20 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             if self.requestline.split(' ')[1] == '/':
                 body = Path('html/index.html').read_text()
             elif self.requestline.split(' ')[1] == '/ping?':
+                body = Path('html/ping.html').read_text()
+            elif self.requestline.split(' ')[1] == '/get?':
                 body = '''<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title> PING </title>
-  </head>
-  <body style="background-color: white;">
-    <h1> PING ok! </h1>
-    <p>The server is running </p>
-    <a href="/"> [Main page] </a>
-  </body>
-</html>'''
+                <html lang="en" dir="ltr">
+                  <head>
+                    <meta charset="utf-8">
+                    <title> GET </title>
+                  </head>
+                  <body style="background-color: white;">
+                    <h1> The sequence number'''+ i +''' </h1>
+                    <p> ''' + sequence[i] + ''' </p>
+                    <a href="/"> [Main page] </a>
+                  </body>
+                </html>'''
             else:
                 body = Path('html/error.html').read_text()
         except FileNotFoundError:
