@@ -27,17 +27,17 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             elif self.requestline.split(' ')[1].startswith('/echo'):
                 msg = self.requestline.split(' ')[1].split('=')[1]
                 body = '''<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>FORM 1</title>
-  </head>
-  <body>
-  <h1> Received message: <h1>
-   ''' + msg + '''  <a href="/"> [Main page] </a>
-    </form>
-  </body>
-</html>'''
+                <html lang="en">
+                  <head>
+                    <meta charset="utf-8">
+                    <title>FORM 1</title>
+                  </head>
+                  <body>
+                  <h1> Received message: <h1>
+                   ''' + msg + '''  <a href="/"> [Main page] </a>
+                    </form>
+                  </body>
+                </html>'''
             else:
                 body = Path('error.html').read_text()
         except FileNotFoundError:

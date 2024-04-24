@@ -2,15 +2,20 @@ import http.server
 import socketserver
 import termcolor
 from pathlib import Path
+import jinja2 as j
 
 # Define the Server's port
 PORT = 8080
 # -- This is for preventing the error: "Port already in use"
 socketserver.TCPServer.allow_reuse_address = True
+sequence = {'0': 'ATACCAGTAG', '1':'ACACGATAGACAAG', '2':'CATGGACGTGAAC', '3':'ACCACACAGGCCACGT', '4':'AGCCGTGACGTAGCA'}
 
 
-# Class with our Handler. It is a called derived from BaseHTTPRequestHandler
-# It means that our class inherits all his methods and properties
+def read_html_file(filename):
+    contents = Path("html/" + filename).read_text()
+    contents = j.Template(contents)
+    return contents
+
 class TestHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
@@ -24,19 +29,16 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 body = Path('html/index.html').read_text()
             elif self.requestline.split(' ')[1] == '/ping?':
                 body = Path('html/ping.html').read_text()
-            elif self.requestline.split(' ')[1] == '/get?':
-                body = '''<!DOCTYPE html>
-                <html lang="en" dir="ltr">
-                  <head>
-                    <meta charset="utf-8">
-                    <title> GET </title>
-                  </head>
-                  <body style="background-color: white;">
-                    <h1> The sequence number'''+ i +''' </h1>
-                    <p> ''' + sequence[i] + ''' </p>
-                    <a href="/"> [Main page] </a>
-                  </body>
-                </html>'''
+            elif self.requestline.split(' ')[1].startswith('/get?'):
+                number = self.requestline.split(' ')[1].split('=')[1]
+                body = read_html_file('get.html')
+                body = body.render(context={'todisplay': sequence[number],'todisplay1': number })
+            elif self.requestline.split(' ')[1].startswith('/gene?'):
+                gene_opt = self.requestline.split(' ')[1].split('=')[1]
+                body = read_html_file('gene.html')
+                filename = '../sequences/' + str(gene_opt + '_sequence.fa')
+                seq = Path(filename).read_text()
+                body = body.render(context={'todisplay': seq, 'todisplay1': gene_opt})
             else:
                 body = Path('html/error.html').read_text()
         except FileNotFoundError:
@@ -59,10 +61,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         return
 
 
-# ------------------------
-# - Server MAIN program
-# ------------------------
-# -- Set the new handler
 Handler = TestHandler
 
 # -- Open the socket server

@@ -12,17 +12,29 @@
       Is the server alive:
       <input type="submit" value="PING"/>
       </form>
-      <p>___________________________________________________________________________________________________________________________________________________________</p>
+    <p>_____________________________________________________________________________________________________________________________________________________________</p>
     <form action="/get">
       Get a sequence. Select a sequence number:
-      <select>
-        <option value="get">0</option>
-        <option value="get">1</option>
-        <option value="get">2</option>
-        <option value="get">3</option>
-        <option value="get">4</option>
+      <select name="option">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
       </select>
         <input type="submit" value="GET"/>
-    </form>
+      </form>
+    <p>_____________________________________________________________________________________________________________________________________________________________</p>
+    <form action="/gene">
+      Get a sequence. Select a sequence number:
+      <select name="gene_opt">
+        <option value="ADA">ADA</option>
+        <option value="FRAT1">FRAT1</option>
+        <option value="FXN">FXN</option>
+        <option value="RNU6_269P">RNU6_269P</option>
+        <option value="U5">U5</option>
+      </select>
+        <input type="submit" value="GENE"/>
+      </form>
   </body>
 </html>
