@@ -8,20 +8,17 @@ import json
 # Define the server and endpoint
 SERVER = 'rest.ensembl.org'
 ENDPOINT = '/xrefs/symbol/homo_sapiens/'
-
+PARAMS = '?content-type=application/json'
 # Define the list of genes
 genes = ["FRAT1", "ADA", "FXN", "RNU6_269P", "MIR633", "TTTY4C", "RBMY2YP", "FGFR3", "KDR", "ANK2"]
-
-# Create a dictionary to store gene identifiers
 gene_identifiers = {}
 
-# Iterate over genes and make requests for each gene
-for gene in genes:
 
+for gene in genes:
     try:
         # Establish connection with the server, and send GET request to Ensembl REST API endpoint for the gene
         connection = http.client.HTTPSConnection(SERVER)
-        connection.request("GET", ENDPOINT + gene + "?content-type=application/json")
+        connection.request("GET", ENDPOINT + gene + PARAMS)
 
         # Get the response
         response = connection.getresponse()
@@ -29,6 +26,8 @@ for gene in genes:
 
         # Check if the request:
         if response.status == 200:
+            if gene == genes[0]:
+                print(f'Dictionary of genes!\nThere are {len(genes)} genes in the dictionary\n')
             # Obtain the stable identifier (gene id) from the dict they offer:
             gene_id = data[0]["id"]
             gene_identifiers[gene] = gene_id
