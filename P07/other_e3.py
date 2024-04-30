@@ -1,25 +1,15 @@
+# In this exercise you have to program a client that connects to the /sequence/id endpoint and
+# gets the sequence and description of the MIR633 gene.
+import termcolor
 import http.client
 import json
-import termcolor
-from e2_class import GeneIdentifierClient
 
-# Intro info:
 SERVER = 'rest.ensembl.org'
 ENDPOINTS = '/sequence/id/'
+gene_id = 'ENSG00000234389'
 PARAMS = '?content-type=application/json'
 URL = SERVER + ENDPOINTS + PARAMS
-gene = 'MIR633'
 print(f'\nServer: {SERVER}\nURL: {URL}')
-
-# Get id:
-gene_client = GeneIdentifierClient()
-genes = ['MIR633']
-gene_id_dict = gene_client.get_gene_identifiers(genes)
-gene_id = gene_id_dict[gene]
-
-# Get the description and sequence:
-    # 1st define the fucntion:
-
 def get_gene_sequence(gene_id):
     try:
         connection = http.client.HTTPSConnection(SERVER)
@@ -43,11 +33,12 @@ def get_gene_sequence(gene_id):
         # Close the connection
         if connection:
             connection.close()
-        else:
-            print(f"An error occurred")
 
 
-    # Now we obtain the rest:
+# MIR633 gene identifier
+gene_id = "ENSG00000234389"
+gene = 'MIR633'
+# Get the sequence and description of the MIR633 gene
 sequence, description = get_gene_sequence(gene_id)
 
 if sequence is not None and description is not None:

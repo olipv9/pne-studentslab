@@ -2,6 +2,7 @@ class Seq:
     def __init__(self, strbases=""):
         d = ['A', 'T', 'C', 'G']
         self.valid_sequence = True
+        self.dic_bases = ''
         for i in strbases:
             if i not in d:
                 self.valid_sequence = False
@@ -66,17 +67,17 @@ class Seq:
         return count_base
 
     def seq_count(self):
-        dic_bases = {'A': 0, 'G': 0, 'T': 0, 'C': 0}
+        self.dic_bases = {'A': 0, 'G': 0, 'T': 0, 'C': 0}
         for i in self.strbases:
             if i == 'A':
-                dic_bases['A'] += 1
+                self.dic_bases['A'] += 1
             elif i == 'T':
-                dic_bases['T'] += 1
+                self.dic_bases['T'] += 1
             elif i == 'C':
-                dic_bases['C'] += 1
+                self.dic_bases['C'] += 1
             elif i == 'G':
-                dic_bases['G'] += 1
-        return dic_bases
+                self.dic_bases['G'] += 1
+        return self.dic_bases
 
     def most_freq_base(self):
         dic_bases = {}
@@ -94,6 +95,13 @@ class Seq:
                 highest = val
                 name = key
         return name
+
+    # Newer updates:
+    def get_average(self, base):
+        num = self.dic_bases[base]
+        average = (int(num) * 100) / (len(self.strbases))
+        average = round(average, 2)
+        return average, num
 
 
 

@@ -9,6 +9,7 @@ class GeneIdentifierClient:
         self.endpoint = '/xrefs/symbol/homo_sapiens/'
 
     def get_gene_identifiers(self, genes):
+        print(f'Dictionary of genes!\nThere are {len(genes)} genes in the dictionary\n')
         gene_identifiers = {}
         for gene in genes:
             try:
@@ -33,11 +34,6 @@ class GeneIdentifierClient:
         return gene_identifiers
 
 
-# Usage
-gene_client = GeneIdentifierClient()
-genes = ["FRAT1", "ADA", "FXN", "RNU6_269P", "MIR633", "TTTY4C", "RBMY2YP", "FGFR3", "KDR", "ANK2"]
-gene_identifiers = gene_client.get_gene_identifiers(genes)
 
-for gene, identifier in gene_identifiers.items():
-    termcolor.cprint(f'{gene}: ', 'green', end='')
-    print(f'-----> {identifier}')
+
+

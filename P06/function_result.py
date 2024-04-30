@@ -15,6 +15,7 @@ def check_for_seq_errors(seq):
             valid = False
             break
     return valid
+
 def seq_count(seq):
     dic_bases = {'A': 0, 'G': 0, 'T': 0, 'C': 0}
     for i in seq:
