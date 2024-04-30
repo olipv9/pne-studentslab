@@ -82,7 +82,6 @@ if sequence is not None and description is not None:
 else:
     print("Failed to retrieve gene sequence and description.")
 
-# Usage
 
 
 
