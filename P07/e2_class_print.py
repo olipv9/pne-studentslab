@@ -8,3 +8,5 @@ gene_identifiers = gene_client.get_gene_identifiers(genes)
 for gene, identifier in gene_identifiers.items():
     termcolor.cprint(f'{gene}: ', 'green', end='')
     print(f'-----> {identifier}')
+
+

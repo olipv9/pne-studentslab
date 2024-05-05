@@ -1,3 +1,95 @@
+import http.client
+import json
+from Bio.Seq import Seq
+
+
+class GeneAnalyzer:
+    def __init__(self):
+        self.server = 'rest.ensembl.org'
+        self.endpoint = '/sequence/id/'
+
+    def get_gene_sequence(self, gene_id):
+        try:
+            connection = http.client.HTTPSConnection(self.server)
+            connection.request("GET", f"{self.endpoint}{gene_id}?content-type=application/json")
+            response = connection.getresponse()
+            data = json.loads(response.read().decode('utf-8'))
+
+            if response.status == 200:
+                sequence = data["seq"]
+                description = data["desc"]
+                return sequence, description
+            else:
+                print(f"Error: {response.status} - {response.reason}")
+                return None, None
+
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return None, None
+
+        finally:
+            if connection:
+                connection.close()
+
+    def analyze_gene_sequence(self, gene_name):
+        gene_id = self.get_gene_id(gene_name)
+        if gene_id:
+            sequence, description = self.get_gene_sequence(gene_id)
+            if sequence:
+                # Create Seq object
+                seq_obj = Seq(sequence)
+
+                # Calculate length and base counts
+                total_length = len(seq_obj)
+                base_counts = seq_obj.count_per_letter()
+
+                # Calculate percentage of each base
+                total_bases = sum(base_counts.values())
+                base_percentages = {base: count / total_bases * 100 for base, count in base_counts.items()}
+
+                # Calculate most frequent base
+                most_frequent_base = max(base_counts, key=base_counts.get)
+
+                # Print gene information
+                print(f"Gene Name: {gene_name}")
+                print(f"Description: {description}")
+                print(f"Total Length: {total_length}")
+                print(f"Number of Bases: {total_bases}")
+                print("Percentage of Each Base:")
+                for base, percentage in base_percentages.items():
+                    print(f"{base}: {percentage:.2f}%")
+                print(f"Most Frequent Base: {most_frequent_base}")
+            else:
+                print("Failed to retrieve gene sequence.")
+        else:
+            print(f"Gene '{gene_name}' not found.")
+
+    def get_gene_id(self, gene_name):
+        try:
+            connection = http.client.HTTPSConnection(self.server)
+            connection.request("GET", f"/xrefs/symbol/homo_sapiens/{gene_name}?content-type=application/json")
+            response = connection.getresponse()
+            data = json.loads(response.read().decode('utf-8'))
+
+            if response.status == 200 and data:
+                gene_id = data[0]["id"]
+                return gene_id
+            else:
+                return None
+
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return None
+
+        finally:
+            if connection:
+                connection.close()
+
+
+# Usage
+gene_analyzer = GeneAnalyzer()
+gene_name = input("Enter the gene name: ")
+gene_analyzer.analyze_gene_sequence(gene_name)
 # Now that we can get genes from the server, it is time to do some calculations with them. We will use the Seq Class we created some assignments ago.
 
 # The program should ask the user to enter the gene name and then get the gene from the server, print the gene's name,
