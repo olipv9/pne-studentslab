@@ -69,16 +69,18 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     option = self.requestline.split(' ')[1].split('=')[2]
                     body = read_html_file('operation.html')
                     if option == 'info':
-                        body = body.render(context={'todisplay': seq, 'todisplay1': option, 'todisplay2': f'Total length: {len(seq)}',
-                                                    'todisplay3':get_result(seq)})
+                        body = body.render(context={'todisplay': seq, 'todisplay1': option,
+                                                    'todisplay2': f'Total length: {len(seq)}','todisplay3':get_result(seq)})
                     elif option == "complementary":
                         comp_seq = Seq(seq)
                         comp_seq = comp_seq.complement()
-                        body = body.render(context={'todisplay': seq, 'todisplay1': option, 'todisplay2': comp_seq, 'todisplay3':'' })
+                        body = body.render(context={'todisplay': seq, 'todisplay1': option, 'todisplay2': comp_seq,
+                                                    'todisplay3':'' })
                     elif option == "reverse":
                         reverse_seq = Seq(seq)
                         reverse_seq = reverse_seq.rev_seq()
-                        body = body.render(context={'todisplay': seq, 'todisplay1': option, 'todisplay2': reverse_seq, 'todisplay3':''})
+                        body = body.render(context={'todisplay': seq, 'todisplay1': option, 'todisplay2': reverse_seq,
+                                                    'todisplay3':''})
                 except IndexError:
                     body = Path('html/error.html').read_text()
                     num = 404

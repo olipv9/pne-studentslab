@@ -2,57 +2,74 @@ import http.server
 import socketserver
 import termcolor
 from pathlib import Path
-import os
+from ensembl_class_server import Ensembl_server
+from useful_function import print_out_list, read_html_file
 
 # Define the Server's port
 PORT = 8080
 
-
-# -- This is for preventing the error: "Port already in use"
-
 class TestHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
-
         # Print the request line
         termcolor.cprint(self.requestline, 'green')
-
         # Open the form1.html file
         # Read the index from the file
         try:
             request_path = self.requestline.split(' ')[1]
             if request_path == '/':
                 body = Path('html/index.html').read_text()
+
             elif request_path.startswith('/number_1'):
-                body = Path('html/species_num.html').read_text()
+                message = request_path.split('/')[-1].split('=')[1]
+                option_1 = Ensembl_server('/info/species?content-type=application/json')
+                length, names_list = option_1.get_option1(message)
+                if length and names_list:
+                    body = read_html_file('species_num.html')
+                    body = body.render(context={'todisplay1': length, 'todisplay2': message,
+                                                'todisplay3': f' {print_out_list(names_list)}'})
+                else:
+                    raise FileNotFoundError
+
             elif request_path.startswith('/number_2'):
-                body = Path('html/karyotype.html').read_text()
+                message = request_path.split('/')[-1].split('=')[1]
+                species_name = message.replace('+', '_')
+                option_2 = Ensembl_server(f'/info/assembly/{species_name}?content-type=application/json')
+                karyotype = option_2.get_option2()
+                if karyotype:
+                    body = read_html_file('karyotype.html')
+                    body = body.render(context={'todisplay1': f' {print_out_list(karyotype)}'})
+                else:
+                    raise FileNotFoundError
             elif request_path.startswith('/number_3'):
+                message1 = request_path.split('/')[-1].split('=')[1].split('&')[0]
+                chromosome = request_path.split('/')[-1].split('=')[-1]
                 if request_path.split('=')[1].startswith('&') or request_path.split('=')[-1] == '':
                     body = Path('html/specific_error.html').read_text()
                 else:
-                    body = Path('html/chrom_len.html').read_text()
+                    species_name = message1.replace('+', '_')
+                    option_3 = Ensembl_server(f'/info/assembly/{species_name}?content-type=application/json')
+                    length_chrom = option_3.get_option3(chromosome)
+                    if length_chrom:
+                        body = read_html_file('chrom_len.html')
+                        body = body.render(context={'todisplay1': f' {length_chrom}'})
+                    else:
+                        raise FileNotFoundError
+
             else:
                 body = Path('html/error.html').read_text()
-        except FileNotFoundError:
+        except (FileNotFoundError, TypeError):
             body = Path('html/error.html').read_text()
 
         # Generating the response message
-
         self.send_response(200)  # -- Status line: OK!
-
         # Define the content-type header:
         self.send_header('Content-Type', 'text/html')
         self.send_header('Content-Length', str(len(body)))  # Length of body as string
-
         # The header is finished
         self.end_headers()
-
         # Send the response message
         self.wfile.write(str.encode(body))
-
-        return
-
 
 Handler = TestHandler
 

@@ -9,6 +9,8 @@ def read_html_file(filename):
         print(f'The file does not exits')
         contents = None
     return contents
+
+
 def check_for_seq_errors(seq):
     seq = seq.upper()
     seq_bases = ['A', 'C', 'G', 'T']
@@ -19,3 +21,11 @@ def check_for_seq_errors(seq):
             valid = False
             break
     return valid
+
+
+def print_out_list(enu_list):
+    html = "<ul>"
+    for index, item in enumerate(enu_list):
+        html += f"<li>{item}</li>"
+    html += "</ul>"
+    return html
