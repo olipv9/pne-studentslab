@@ -4,11 +4,11 @@
     <meta charset="utf-8">
     <title>Final Practice</title>
   </head>
-  <body style="background-color: lightblue;">
+  <body style="background-color: MediumAquamarine;">
     <h1>Browsing Human and Vertebrate genome </h1>
     <h2><u>Basic Level Services</u></h2>
     <p><b> 1. List of species in the genome database: </b></p>
-    <form action="/number_1">
+    <form action="/listSpecies">
         <ul class="paragraph-list">
             <li>Limit: <input type="text" name="msg"></li>
         </ul>
@@ -17,7 +17,7 @@
 
     <p>_____________________________________________________________________________________________________________________________________________________________</p>
     <p><b>2. Information about the karyotype:</b></p>
-    <form action="/number_2">
+    <form action="/karyotype">
        <ul class="paragraph-list">
            <li>Select the species: <input type="text" name="msg"></li>
        </ul>
@@ -25,7 +25,7 @@
       </form>
     <p>_____________________________________________________________________________________________________________________________________________________________</p>
     <p><b>3. Chromosome length:</b></p>
-    <form action="/number_3">
+    <form action="/chromosomeLength">
          <ul class="paragraph-list"><li>Select the species: <input type="text" name="specie"></li>
         <pre></pre>
          <li>Select a chromosome: <input type="text" name="chromosome"></li>
@@ -34,6 +34,22 @@
         <input type="submit" value="Send"/>
       </form>
     <p>_____________________________________________________________________________________________________________________________________________________________</p>
+    <p><b>4. Sequence of a human gene:</b></p>
+    <form action="/geneSeq">
+         <ul class="paragraph-list"><li>Select the gene (must belong to the human genome): <input type="text" name="specie"></li>
+        <pre></pre>
+             </ul>
+        <input type="submit" value="Send"/>
       </form>
+    <p>_____________________________________________________________________________________________________________________________________________________________</p>
+    <p><b>5. Get more concrete info about a human gene: start, end, length, id and name of the chromosome:</b></p>
+    <form action="/geneInfo">
+         <ul class="paragraph-list"><li>Select the gene (must belong to the human genome): <input type="text" name="specie"></li>
+        <pre></pre>
+             </ul>
+        <input type="submit" value="Send"/>
+      </form>
+    <p>_____________________________________________________________________________________________________________________________________________________________</p>
+    </form>
   </body>
 </html>

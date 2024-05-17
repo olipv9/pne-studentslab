@@ -76,6 +76,62 @@ class Ensembl_server:
         except Exception as e:
             print(f"An error occurred: -> {e}")
 
+    def get_gene_id(self, gene_name):
+        try:
+            connection = http.client.HTTPSConnection(self.server)
+            connection.request("GET", f"/xrefs/symbol/homo_sapiens/{gene_name}?content-type=application/json")
+            response = connection.getresponse()
+            data = json.loads(response.read().decode('utf-8'))
+
+            if response.status == 200 and data:
+                gene_id = data[0]["id"]
+                return gene_id
+            else:
+                print(f"Error: {response.status} - {response.reason}")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+    def get_gene_sequence(self, gene_id):
+        self.url = f"/sequence/id/{gene_id}?content-type=application/json"
+        try:
+            connection = http.client.HTTPSConnection(self.server)
+            connection.request("GET", self.url)
+            response = connection.getresponse()
+            data = json.loads(response.read().decode('utf-8'))
+
+            # Check if the request (status code 200)
+            if response.status == 200:
+                sequence = data["seq"]
+                return sequence
+            else:
+                print(f"Error: {response.status} - {response.reason}")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+    def get_gene_info(self, gene_id):
+        gene_info_url = f"/lookup/id/{gene_id}?content-type=application/json"
+        try:
+            connection = http.client.HTTPSConnection(self.server)
+            connection.request("GET", gene_info_url)
+            response = connection.getresponse()
+            data = json.loads(response.read().decode('utf-8'))
+            if response.status == 200:
+                gene_info = {
+                    "start": data['start'],
+                    "end": data['end'],
+                    "length": data['end'] - data['start'] + 1,
+                    "chromosome_id": data['seq_region_name'],
+                    "gene_id": data['id'],
+                    "gene_name": data['display_name']
+                }
+                return gene_info
+            else:
+                print(f"Error: {response.status} - {response.reason}")
+        except Exception as e:
+            print(f"An error occurred: -> {e}")
 
 
-
+# c = Ensembl_server("/lookup/symbol/homo_sapiens/frat1?content-type=application/json)")
+# x = c.get_gene_id('frat1')
+# print(x)
+# print(c.get_gene_info(x))

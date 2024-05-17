@@ -20,7 +20,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             if request_path == '/':
                 body = Path('html/index.html').read_text()
 
-            elif request_path.startswith('/number_1'):
+            elif request_path.startswith('/listSpecies'):
                 message = request_path.split('/')[-1].split('=')[1]
                 option_1 = Ensembl_server('/info/species?content-type=application/json')
                 length, names_list = option_1.get_option1(message)
@@ -31,7 +31,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 else:
                     raise FileNotFoundError
 
-            elif request_path.startswith('/number_2'):
+            elif request_path.startswith('/karyotype'):
                 message = request_path.split('/')[-1].split('=')[1]
                 species_name = message.replace('+', '_')
                 option_2 = Ensembl_server(f'/info/assembly/{species_name}?content-type=application/json')
@@ -41,7 +41,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     body = body.render(context={'todisplay1': f' {print_out_list(karyotype)}'})
                 else:
                     raise FileNotFoundError
-            elif request_path.startswith('/number_3'):
+            elif request_path.startswith('/chromosomeLength'):
                 message1 = request_path.split('/')[-1].split('=')[1].split('&')[0]
                 chromosome = request_path.split('/')[-1].split('=')[-1]
                 if request_path.split('=')[1].startswith('&') or request_path.split('=')[-1] == '':
@@ -55,10 +55,35 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                         body = body.render(context={'todisplay1': f' {length_chrom}'})
                     else:
                         raise FileNotFoundError
+            elif request_path.startswith('/geneSeq'):
+                gene = request_path.split('/')[-1].split('=')[1].upper()
+                option_4 = Ensembl_server(f"/lookup/symbol/homo_sapiens/{gene}?content-type=application/json)")
+                gene_id = option_4.get_gene_id(gene)
+                gene_seq = option_4.get_gene_sequence(gene_id)
+                if gene_seq:
+                    body = read_html_file('geneSeq.html')
+                    body = body.render(context={'todisplay1': f' {gene}', 'todisplay2': f' {gene_seq}'})
+                else:
+                    raise FileNotFoundError
+            elif request_path.startswith('/geneInfo'):
+                gene = request_path.split('/')[-1].split('=')[1].upper()
+                option_5 = Ensembl_server(f"/lookup/symbol/homo_sapiens/{gene}?content-type=application/json)")
+                gene_id = option_5.get_gene_id(gene)
+                gene_info_dict = option_5.get_gene_info(gene_id)
+                if gene_info_dict:
+                    body = read_html_file('geneInfo.html')
+                    body = body.render(context={'todisplay1': f' {gene_info_dict["gene_name"]}',
+                                                'todisplay2': f'- <b>Start</b>: {gene_info_dict["start"]}<br>'
+                                                              f'- <b>End</b>: {gene_info_dict["end"]}<br>'
+                                                              f'- <b>Length</b>: {gene_info_dict["length"]}<br>'
+                                                              f'- <b>Chromosome</b>: {gene_info_dict["chromosome_id"]}<br>'
+                                                              f'- <b>Id</b>: {gene_info_dict["gene_id"]}<br>'})
+                else:
+                    raise FileNotFoundError
 
             else:
                 body = Path('html/error.html').read_text()
-        except (FileNotFoundError, TypeError):
+        except (FileNotFoundError, TypeError, IndexError):
             body = Path('html/error.html').read_text()
 
         # Generating the response message
