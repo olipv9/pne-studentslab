@@ -6,7 +6,7 @@
   </head>
   <body style="background-color: MediumAquamarine;">
     <h1>Browsing Human and Vertebrate genome </h1>
-    <h2><u>Basic Level Services</u></h2>
+    <h2 style="color:white"><u>Basic Level Services</u></h2>
     <p><b> 1. List of species in the genome database: </b></p>
     <form action="/listSpecies">
         <ul class="paragraph-list">
@@ -37,7 +37,6 @@
     <p><b>4. Sequence of a human gene:</b></p>
     <form action="/geneSeq">
          <ul class="paragraph-list"><li>Select the gene (must belong to the human genome): <input type="text" name="specie"></li>
-        <pre></pre>
              </ul>
         <input type="submit" value="Send"/>
       </form>
@@ -45,7 +44,13 @@
     <p><b>5. Get more concrete info about a human gene: start, end, length, id and name of the chromosome:</b></p>
     <form action="/geneInfo">
          <ul class="paragraph-list"><li>Select the gene (must belong to the human genome): <input type="text" name="specie"></li>
-        <pre></pre>
+             </ul>
+        <input type="submit" value="Send"/>
+      </form>
+    <p>_____________________________________________________________________________________________________________________________________________________________</p>
+    <p><b>6. Obtain the total length of the sequence belonging to the gene chosen, and the percentages of each base: </b></p>
+    <form action="/geneCalc">
+         <ul class="paragraph-list"><li>Select the gene (must belong to the human genome): <input type="text" name="specie"></li>
              </ul>
         <input type="submit" value="Send"/>
       </form>

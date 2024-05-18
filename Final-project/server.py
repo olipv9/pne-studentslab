@@ -3,7 +3,7 @@ import socketserver
 import termcolor
 from pathlib import Path
 from ensembl_class_server import Ensembl_server
-from useful_function import print_out_list, read_html_file
+from useful_function import print_out_list, read_html_file, get_len_percent
 
 # Define the Server's port
 PORT = 8080
@@ -81,6 +81,19 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 else:
                     raise FileNotFoundError
 
+            elif request_path.startswith('/geneCalc'):
+                gene = request_path.split('/')[-1].split('=')[1].upper()
+                option_6 = Ensembl_server(f"/lookup/symbol/homo_sapiens/{gene}?content-type=application/json)")
+                gene_id = option_6.get_gene_id(gene)
+                gene_seq = option_6.get_gene_sequence(gene_id)
+                total_length, gene_average_dict = get_len_percent(gene_seq)
+                if total_length:
+                    body = read_html_file('geneCalc.html')
+                    body = body.render(context={'todisplay1': f' {gene}', 'todisplay2': f' {total_length}<br>',
+                                                'todisplay3': f'- <b>A</b>: {gene_average_dict["A"]}<br>'
+                                                              f'- <b>C</b>: {gene_average_dict["C"]}<br>'
+                                                              f'- <b>T</b>: {gene_average_dict["T"]}<br>'
+                                                              f'- <b>G</b>: {gene_average_dict["G"]}<br>'})
             else:
                 body = Path('html/error.html').read_text()
         except (FileNotFoundError, TypeError, IndexError):

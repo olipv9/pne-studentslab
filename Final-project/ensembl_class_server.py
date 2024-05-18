@@ -1,6 +1,6 @@
 import http.client
 import json
-
+from useful_function import get_len_percent
 
 class Ensembl_server:
     def __init__(self, url):
@@ -37,8 +37,6 @@ class Ensembl_server:
             if connection:
                 connection.close()
 
-
-
     def get_option2(self):
         try:
             connection = http.client.HTTPSConnection(self.server)
@@ -54,7 +52,6 @@ class Ensembl_server:
             print(f'That specie is not within the ensembl database, try again with a valid option!')
         except Exception as e:
             print(f"An error occurred: -> {e}")
-
 
     def get_option3(self, c_num):
         try:
@@ -131,7 +128,7 @@ class Ensembl_server:
             print(f"An error occurred: -> {e}")
 
 
-# c = Ensembl_server("/lookup/symbol/homo_sapiens/frat1?content-type=application/json)")
-# x = c.get_gene_id('frat1')
-# print(x)
-# print(c.get_gene_info(x))
+# c = Ensembl_server("/lookup/symbol/homo_sapiens/blast?content-type=application/json)")
+# x = c.get_gene_id('blast')
+# y = c.get_gene_sequence(x)
+# print(get_len_percent(y))
