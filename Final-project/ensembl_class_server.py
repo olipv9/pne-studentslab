@@ -2,6 +2,7 @@ import http.client
 import json
 from useful_function import get_len_percent
 
+
 class Ensembl_server:
     def __init__(self, url):
         self.server = 'rest.ensembl.org'
@@ -138,9 +139,6 @@ class Ensembl_server:
                 for gene in data:
                     if gene['feature_type'] == 'gene':
                         gene_names.append(gene.get('external_name', gene['id']))
-                # for gene in data:
-                    # if gene['feature_type'] == 'gene':
-                    #     gene_names.append(gene['external_name'])
                 return gene_names
             else:
                 print(f"Error: {response.status} - {response.reason}")
