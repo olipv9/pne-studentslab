@@ -82,18 +82,45 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     raise FileNotFoundError
 
             elif request_path.startswith('/geneCalc'):
-                gene = request_path.split('/')[-1].split('=')[1].upper()
-                option_6 = Ensembl_server(f"/lookup/symbol/homo_sapiens/{gene}?content-type=application/json)")
-                gene_id = option_6.get_gene_id(gene)
-                gene_seq = option_6.get_gene_sequence(gene_id)
-                total_length, gene_average_dict = get_len_percent(gene_seq)
-                if total_length:
-                    body = read_html_file('geneCalc.html')
-                    body = body.render(context={'todisplay1': f' {gene}', 'todisplay2': f' {total_length}<br>',
-                                                'todisplay3': f'- <b>A</b>: {gene_average_dict["A"]}<br>'
-                                                              f'- <b>C</b>: {gene_average_dict["C"]}<br>'
-                                                              f'- <b>T</b>: {gene_average_dict["T"]}<br>'
-                                                              f'- <b>G</b>: {gene_average_dict["G"]}<br>'})
+                try:
+                    gene = request_path.split('/')[-1].split('=')[1].upper()
+                    option_6 = Ensembl_server(f"/lookup/symbol/homo_sapiens/{gene}?content-type=application/json)")
+                    gene_id = option_6.get_gene_id(gene)
+                    gene_seq = option_6.get_gene_sequence(gene_id)
+                    total_length, gene_average_dict = get_len_percent(gene_seq)
+                    if total_length:
+                        body = read_html_file('geneCalc.html')
+                        body = body.render(context={'todisplay1': f' {gene}', 'todisplay2': f' {total_length}<br>',
+                                                    'todisplay3': f'- <b>A</b>: {gene_average_dict["A"]}<br>'
+                                                                  f'- <b>C</b>: {gene_average_dict["C"]}<br>'
+                                                                  f'- <b>T</b>: {gene_average_dict["T"]}<br>'
+                                                                  f'- <b>G</b>: {gene_average_dict["G"]}<br>'})
+                    else:
+                        raise FileNotFoundError
+                except Exception as e:
+                    print(f'Error happened: {e}')
+
+            elif request_path.startswith('/geneList'):
+                if (request_path.split('=')[1].startswith('&') or request_path.split('=')[2] == '&' or
+                        request_path.split('=')[-1] == ''):
+                    body = Path('html/specific_error.html').read_text()
+                else:
+                    try:
+                        chromosome = request_path.split('=')[1].split('&')[0]
+                        start = int(request_path.split('=')[2].split('&')[0])
+                        end = int(request_path.split('=')[-1])
+                        chromosome = chromosome.replace('+', '_')
+                        option_7 = Ensembl_server(f'/overlap/region/homo_sapiens/{chromosome}:{start}-{end}?feature=gene'
+                                                  f';content-type=application/json')
+                        genes_region = option_7.get_genes_in_region()
+                        if genes_region:
+                            body = read_html_file('geneList.html')
+                            body = body.render(context={'todisplay1': f' {chromosome}: start ({start}) &rarr; end ({end})',
+                                                        'todisplay2': f'{print_out_list(genes_region)}'})
+                        else:
+                            raise FileNotFoundError
+                    except (TypeError, ValueError):
+                        body = Path('html/error.html').read_text()
             else:
                 body = Path('html/error.html').read_text()
         except (FileNotFoundError, TypeError, IndexError):

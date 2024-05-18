@@ -127,8 +127,26 @@ class Ensembl_server:
         except Exception as e:
             print(f"An error occurred: -> {e}")
 
+    def get_genes_in_region(self):
+        try:
+            connection = http.client.HTTPSConnection(self.server)
+            connection.request("GET", self.url)
+            response = connection.getresponse()
+            data = json.loads(response.read().decode('utf-8'))
+            if response.status == 200:
+                gene_names = []
+                for gene in data:
+                    if gene['feature_type'] == 'gene':
+                        gene_names.append(gene.get('external_name', gene['id']))
+                # for gene in data:
+                    # if gene['feature_type'] == 'gene':
+                    #     gene_names.append(gene['external_name'])
+                return gene_names
+            else:
+                print(f"Error: {response.status} - {response.reason}")
+                return None
+        except Exception as e:
+            print(f"An error occurred: -> {e}")
+            return None
 
-# c = Ensembl_server("/lookup/symbol/homo_sapiens/blast?content-type=application/json)")
-# x = c.get_gene_id('blast')
-# y = c.get_gene_sequence(x)
-# print(get_len_percent(y))
+
