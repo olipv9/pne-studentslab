@@ -1,7 +1,5 @@
 import http.client
 import json
-from useful_function import get_len_percent
-
 
 class Ensembl_server:
     def __init__(self, url):
@@ -17,23 +15,22 @@ class Ensembl_server:
             response = connection.getresponse()
             data = json.loads(response.read().decode('utf-8'))
             if response.status == 200:
-                try:
-                    if 0 <= int(message) <= len(data['species']):
-                        for i in data['species']:
-                            if i["division"] == "EnsemblVertebrates" and count != int(message):
-                                count += 1
-                                name = i["display_name"]
-                                name_list.append(name)
-                            elif count == int(message):
-                                break
-                        return len(data['species']), name_list
-                    else:
-                        print(f'Limit must be a number within the range!')
-                except (TypeError, ValueError):
-                    print(f'Limit must be an integer number!')
-            else:
-                print(f"Error: {response.status} - {response.reason}")
-
+                if 0 <= int(message) <= len(data['species']):
+                    for i in data['species']:
+                        if i["division"] == "EnsemblVertebrates" and count != int(message):
+                            count += 1
+                            name = i["display_name"]
+                            name_list.append(name)
+                        elif count == int(message):
+                            break
+                    return len(data['species']), name_list
+                else:
+                    print(f'Limit must be a number within the range!')
+        except (TypeError, ValueError):
+                print(f'Limit must be an integer number!')
+        except Exception as e:
+            print(f"Error: {response.status} - {response.reason}")
+            print(f"An error occurred: -> {e}")
         finally:
             if connection:
                 connection.close()
@@ -52,7 +49,12 @@ class Ensembl_server:
         except UnboundLocalError:
             print(f'That specie is not within the ensembl database, try again with a valid option!')
         except Exception as e:
+            print(f"Error: {response.status} - {response.reason}")
             print(f"An error occurred: -> {e}")
+
+        finally:
+            if connection:
+                connection.close()
 
     def get_option3(self, c_num):
         try:
@@ -72,7 +74,10 @@ class Ensembl_server:
         except UnboundLocalError:
             print(f'That specie is not within the ensembl database, try again with a valid option!')
         except Exception as e:
-            print(f"An error occurred: -> {e}")
+            print(f"An error occurred: {e}")
+        finally:
+            if connection:
+                connection.close()
 
     def get_gene_id(self, gene_name):
         try:
@@ -80,7 +85,6 @@ class Ensembl_server:
             connection.request("GET", f"/xrefs/symbol/homo_sapiens/{gene_name}?content-type=application/json")
             response = connection.getresponse()
             data = json.loads(response.read().decode('utf-8'))
-
             if response.status == 200 and data:
                 gene_id = data[0]["id"]
                 return gene_id
@@ -88,6 +92,9 @@ class Ensembl_server:
                 print(f"Error: {response.status} - {response.reason}")
         except Exception as e:
             print(f"An error occurred: {e}")
+        finally:
+            if connection:
+                connection.close()
 
     def get_gene_sequence(self, gene_id):
         self.url = f"/sequence/id/{gene_id}?content-type=application/json"
@@ -105,6 +112,9 @@ class Ensembl_server:
                 print(f"Error: {response.status} - {response.reason}")
         except Exception as e:
             print(f"An error occurred: {e}")
+        finally:
+            if connection:
+                connection.close()
 
     def get_gene_info(self, gene_id):
         gene_info_url = f"/lookup/id/{gene_id}?content-type=application/json"
@@ -126,7 +136,10 @@ class Ensembl_server:
             else:
                 print(f"Error: {response.status} - {response.reason}")
         except Exception as e:
-            print(f"An error occurred: -> {e}")
+            print(f"An error occurred: {e}")
+        finally:
+            if connection:
+                connection.close()
 
     def get_genes_in_region(self):
         try:
@@ -138,13 +151,18 @@ class Ensembl_server:
                 gene_names = []
                 for gene in data:
                     if gene['feature_type'] == 'gene':
-                        gene_names.append(gene.get('external_name', gene['id']))
+                        if gene.get('external_name') != None:
+                            gene_names.append(gene.get('external_name'))
+
                 return gene_names
             else:
                 print(f"Error: {response.status} - {response.reason}")
                 return None
         except Exception as e:
-            print(f"An error occurred: -> {e}")
+            print(f"An error occurred: {e}")
             return None
+        finally:
+            if connection:
+                connection.close()
 
 
