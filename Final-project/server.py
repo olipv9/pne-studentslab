@@ -8,6 +8,7 @@ from useful_function import print_out_list, read_html_file, get_len_percent
 # Define the Server's port
 PORT = 8080
 
+
 class TestHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
@@ -135,6 +136,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         self.end_headers()
         # Send the response message
         self.wfile.write(str.encode(body))
+
 
 Handler = TestHandler
 
