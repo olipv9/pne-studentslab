@@ -46,3 +46,4 @@ def get_len_percent(sequence):
     except ZeroDivisionError as e:
         print(f"An error occurred: -> {e}")
 
+

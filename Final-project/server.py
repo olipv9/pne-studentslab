@@ -2,7 +2,7 @@ import http.server
 import socketserver
 import termcolor
 from pathlib import Path
-from ensembl_class_server import Ensembl_server
+from ensembl_class_server import Ensembl_server, get_scientific_name
 from useful_function import print_out_list, read_html_file, get_len_percent
 
 # Define the Server's port
@@ -33,7 +33,8 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
             elif request_path.startswith('/karyotype'):
                 message = request_path.split('/')[-1].split('=')[1]
-                species_name = message.replace('+', '_')
+                species_name = message.replace('+', ' ')
+                species_name = get_scientific_name(species_name)
                 option_2 = Ensembl_server(f'/info/assembly/{species_name}?content-type=application/json')
                 karyotype = option_2.get_option2()
                 if karyotype:
@@ -41,6 +42,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     body = body.render(context={'todisplay1': f' {print_out_list(karyotype)}'})
                 else:
                     raise FileNotFoundError
+
             elif request_path.startswith('/chromosomeLength'):
                 message1 = request_path.split('/')[-1].split('=')[1].split('&')[0]
                 chromosome = request_path.split('/')[-1].split('=')[-1]

@@ -79,6 +79,7 @@ class Ensembl_server:
             if connection:
                 connection.close()
 
+
     def get_gene_id(self, gene_name):
         try:
             connection = http.client.HTTPSConnection(self.server)
@@ -164,5 +165,28 @@ class Ensembl_server:
         finally:
             if connection:
                 connection.close()
+
+
+def get_scientific_name(common_name):
+    try:
+        connection = http.client.HTTPSConnection('rest.ensembl.org')
+        connection.request("GET", '/info/species?content-type=application/json')
+        response = connection.getresponse()
+        data = json.loads(response.read().decode('utf-8'))
+
+        if response.status == 200 and 'species' in data:
+            for species in data['species']:
+                if species['display_name'].lower() == common_name.lower():
+                    final_name = species['name']
+                    return final_name
+        else:
+            print(f"Error: {response.status} - {response.reason}")
+            return None
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+    finally:
+        if connection:
+            connection.close()
 
 
