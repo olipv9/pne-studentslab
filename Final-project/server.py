@@ -12,6 +12,7 @@ PORT = 8080
 class TestHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
+        num = 200
         # Print the request line
         termcolor.cprint(self.requestline, 'green')
         # Open the form1.html file
@@ -121,14 +122,17 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
             else:
                 body = Path('html/error.html').read_text()
+                num = 404
         except (FileNotFoundError, TypeError, IndexError, ValueError):
             body = Path('html/error.html').read_text()
+            num = 404
         except Exception as e:
             body = Path('html/error.html').read_text()
+            num = 404
             print(f'An unexpected error occurred: {e}')
 
         # Generating the response message
-        self.send_response(200)  # -- Status line: OK!
+        self.send_response(num)
         # Define the content-type header:
         self.send_header('Content-Type', 'text/html')
         self.send_header('Content-Length', str(len(body)))  # Length of body as string
