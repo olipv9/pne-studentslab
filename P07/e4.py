@@ -1,7 +1,8 @@
 import http.client
 import json
-from Bio.Seq import Seq
-
+import termcolor
+from e2_class import GeneIdentifierClient
+from Seq1 import Seq
 
 class GeneAnalyzer:
     def __init__(self):
@@ -95,11 +96,6 @@ gene_analyzer.analyze_gene_sequence(gene_name)
 # The program should ask the user to enter the gene name and then get the gene from the server, print the gene's name,
 # its description (same as exercise 3), the total length, the number of bases, the percentage of each base and the most frequent base in the sequence.
 
-import http.client
-import json
-import termcolor
-from e2_class import GeneIdentifierClient
-from Seq1 import Seq
 
 # Get the gene:
 try:

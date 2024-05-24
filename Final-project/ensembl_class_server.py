@@ -1,6 +1,7 @@
 import http.client
 import json
 
+
 class Ensembl_server:
     def __init__(self, url):
         self.server = 'rest.ensembl.org'
@@ -27,7 +28,7 @@ class Ensembl_server:
                 else:
                     print(f'Limit must be a number within the range!')
         except (TypeError, ValueError):
-                print(f'Limit must be an integer number!')
+            print(f'Limit must be an integer number!')
         except Exception as e:
             print(f"Error: {response.status} - {response.reason}")
             print(f"An error occurred: -> {e}")
@@ -78,7 +79,6 @@ class Ensembl_server:
         finally:
             if connection:
                 connection.close()
-
 
     def get_gene_id(self, gene_name):
         try:
@@ -188,5 +188,3 @@ def get_scientific_name(common_name):
     finally:
         if connection:
             connection.close()
-
-
