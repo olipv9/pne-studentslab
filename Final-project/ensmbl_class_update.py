@@ -2,13 +2,23 @@ import http.client
 import json
 
 
-class Ensembl_server:
+def get_option1(data):
+    name_list = []
+    try:
+        for i in data['species']:
+            name_list.append(i['display_name'])
+        return name_list
+    except (TypeError, ValueError):
+        print(f'Limit must be an integer number within the range!')
+
+
+class Ensembl_server2:
     def __init__(self, url):
         self.server = 'rest.ensembl.org'
         self.url = url
 
-    def get_option1(self, message):
-        name_list = []
+    def get_option1_json(self, message):
+        final_data = []
         count = 0
         try:
             connection = http.client.HTTPSConnection(self.server)
@@ -19,36 +29,11 @@ class Ensembl_server:
                 if 0 <= int(message) <= len(data['species']):
                     for i in data['species']:
                         if i["division"] == "EnsemblVertebrates" and count != int(message):
+                            final_data.append(i)
                             count += 1
-                            name = i["display_name"]
-                            name_list.append(name)
-                        elif count == int(message):
-                            break
-                    return len(data['species']), name_list
-                else:
-                    print(f'Limit must be a number within the range!')
-        except (TypeError, ValueError):
-            print(f'Limit must be an integer number!')
-        except Exception as e:
-            print(f"Error: {response.status} - {response.reason}")
-            print(f"An error occurred: -> {e}")
-        finally:
-            if connection:
-                connection.close()
-
-    def get_option1_json(self, message):
-        try:
-            connection = http.client.HTTPSConnection(self.server)
-            connection.request("GET", self.url)
-            response = connection.getresponse()
-            data = json.loads(response.read().decode('utf-8'))
-            if response.status == 200:
-                if 0 <= int(message) <= len(data['species']):
-                    final_data = data['species'][:int(message)]
                     data['species'] = final_data
                     return len(data['species']), data
                 else:
-                    # print(f'Limit must be a number within the range!')
                     raise Exception('Limit must be a number within the range!')
             else:
                 raise Exception(f'An error occured with the connection. {response.status} - {response.reason} ')
@@ -88,7 +73,8 @@ class Ensembl_server:
                 for i in main_list:
                     if i['name'] == c_num:
                         final_length = i['length']
-                return final_length
+                        break
+                return final_length, i
             else:
                 print(f"Error: {response.status} - {response.reason}")
 
@@ -128,7 +114,7 @@ class Ensembl_server:
             # Check if the request (status code 200)
             if response.status == 200:
                 sequence = data["seq"]
-                return sequence
+                return sequence, data
             else:
                 print(f"Error: {response.status} - {response.reason}")
         except Exception as e:
@@ -174,7 +160,6 @@ class Ensembl_server:
                     if gene['feature_type'] == 'gene':
                         if gene.get('external_name') != None:
                             gene_names.append(gene.get('external_name'))
-
                 return gene_names
             else:
                 print(f"Error: {response.status} - {response.reason}")
