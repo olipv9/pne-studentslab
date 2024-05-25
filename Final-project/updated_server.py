@@ -3,9 +3,8 @@ import json
 import socketserver
 import termcolor
 from pathlib import Path
-from ensembl_class_server import Ensembl_server, get_scientific_name
 from useful_function import print_out_list, read_html_file, get_len_percent
-from ensmbl_class_update import Ensembl_server2, get_option1
+from ensmbl_class_update import Ensembl_server2, get_scientific_name
 
 # Define the Server's port
 PORT = 8080
@@ -27,15 +26,16 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 body = Path('html/index.html').read_text()
 
             elif request_path.startswith('/listSpecies'):
+                species_dict = {}
                 message = request_path.split('/')[-1].split('=')[1].split('&')[0]
                 option_1 = Ensembl_server2('/info/species?content-type=application/json')
-                length, names_list = option_1.get_option1_json(message)
+                length, names_list = option_1.get_option1(message)
                 if request_path.endswith('json=1'):
                     content_type = 'application/json'
-                    body = json.dumps(names_list)
+                    species_dict['species'] = names_list
+                    body = json.dumps(species_dict)
                 else:
                     if length and names_list:
-                        names_list = get_option1(message, names_list)
                         body = read_html_file('species_num.html')
                         body = body.render(context={'todisplay1': length, 'todisplay2': message,
                                                 'todisplay3': f' {print_out_list(names_list)}'})
@@ -112,9 +112,9 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
             elif request_path.startswith('/geneCalc'):
                 gene = request_path.split('/')[-1].split('=')[1].split('&')[0].upper()
-                option_6 = Ensembl_server(f"/lookup/symbol/homo_sapiens/{gene}?content-type=application/json)")
+                option_6 = Ensembl_server2(f"/lookup/symbol/homo_sapiens/{gene}?content-type=application/json)")
                 gene_id = option_6.get_gene_id(gene)
-                gene_seq = option_6.get_gene_sequence(gene_id)
+                gene_seq, data = option_6.get_gene_sequence(gene_id)
                 total_length, gene_average_dict = get_len_percent(gene_seq)
                 if request_path.endswith('json=1'):
                     content_type = 'application/json'
@@ -140,7 +140,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     start = int(request_path.split('=')[2].split('&')[0])
                     end = int(request_path.split('=')[3].split('&')[0])
                     chromosome = chromosome.replace('+', '_')
-                    option_7 = Ensembl_server(f'/overlap/region/homo_sapiens/{chromosome}:{start}-{end}?feature=gene'
+                    option_7 = Ensembl_server2(f'/overlap/region/homo_sapiens/{chromosome}:{start}-{end}?feature=gene'
                                               f';content-type=application/json')
                     genes_region = option_7.get_genes_in_region()
                     if request_path.endswith('json=1'):

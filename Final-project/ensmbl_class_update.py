@@ -2,23 +2,13 @@ import http.client
 import json
 
 
-def get_option1(data):
-    name_list = []
-    try:
-        for i in data['species']:
-            name_list.append(i['display_name'])
-        return name_list
-    except (TypeError, ValueError):
-        print(f'Limit must be an integer number within the range!')
-
-
 class Ensembl_server2:
     def __init__(self, url):
         self.server = 'rest.ensembl.org'
         self.url = url
 
-    def get_option1_json(self, message):
-        final_data = []
+    def get_option1(self, message):
+        name_list = []
         count = 0
         try:
             connection = http.client.HTTPSConnection(self.server)
@@ -27,12 +17,12 @@ class Ensembl_server2:
             data = json.loads(response.read().decode('utf-8'))
             if response.status == 200:
                 if 0 <= int(message) <= len(data['species']):
+                    final_length = len(data['species'])
                     for i in data['species']:
                         if i["division"] == "EnsemblVertebrates" and count != int(message):
-                            final_data.append(i)
+                            name_list.append(i['display_name'])
                             count += 1
-                    data['species'] = final_data
-                    return len(data['species']), data
+                    return final_length, name_list
                 else:
                     raise Exception('Limit must be a number within the range!')
             else:
@@ -181,7 +171,8 @@ def get_scientific_name(common_name):
 
         if response.status == 200 and 'species' in data:
             for species in data['species']:
-                if species['display_name'].lower() == common_name.lower():
+                if (species['display_name'].lower() == common_name.lower() or
+                        species['name'].replace('_', ' ').lower() == common_name.replace('_', ' ').lower()):
                     final_name = species['name']
                     return final_name
         else:

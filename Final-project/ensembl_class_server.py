@@ -196,7 +196,8 @@ def get_scientific_name(common_name):
 
         if response.status == 200 and 'species' in data:
             for species in data['species']:
-                if species['display_name'].lower() == common_name.lower():
+                if (species['display_name'].lower() == common_name.lower() or
+                        species['name'].replace('_', ' ').lower() == common_name.lower()):
                     final_name = species['name']
                     return final_name
         else:
@@ -208,3 +209,5 @@ def get_scientific_name(common_name):
     finally:
         if connection:
             connection.close()
+
+
