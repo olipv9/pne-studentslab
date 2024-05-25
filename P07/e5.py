@@ -1,8 +1,8 @@
 import http.client
 import json
 import termcolor
-from e2_class import GeneIdentifierClient
 from Seq1 import Seq
+from e4 import GeneAnalyzer
 
 # Get the gene:
 gene_dict = ["FRAT1", "ADA", "FXN", "RNU6_269P", "MIR633", "TTTY4C", "RBMY2YP", "FGFR3", "KDR", "ANK2"]
@@ -15,45 +15,11 @@ URL = SERVER + ENDPOINTS + PARAMS
 print(f'\nServer: {SERVER}\nURL: {URL}\n')
 
 
-# Get id:
-gene_client = GeneIdentifierClient()
-genes = gene_dict
-gene_id_dict = gene_client.get_gene_identifiers(genes)
-
-# Get the description and sequence:
-    # 1st define the fucntion:
-
-def get_gene_sequence(gene_id):
-    try:
-        connection = http.client.HTTPSConnection(SERVER)
-        connection.request("GET", f"/sequence/id/{gene_id}?content-type=application/json")
-        response = connection.getresponse()
-        data = json.loads(response.read().decode('utf-8'))
-
-        # Check if the request (status code 200)
-        if response.status == 200:
-            print(f"Ping response!: 200 OK\n")
-            sequence = data["seq"]
-            description = data["desc"]
-
-            return sequence, description
-        else:
-            print(f"Error: {response.status} - {response.reason}")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-
-    finally:
-        # Close the connection
-        if connection:
-            connection.close()
-        else:
-            print(f"An error occurred")
-
-
-    # Now we obtain the rest:
-for gene in gene_id_dict:
-    gene_id = gene_id_dict[gene]
-    sequence, description = get_gene_sequence(gene_id)
+for gene in gene_dict:
+    gene_client = GeneAnalyzer()
+    gene = gene.upper()
+    gene_id = gene_client.get_gene_id(gene)
+    sequence, description = gene_client.get_gene_sequence(gene_id)
     if sequence is not None and description is not None:
         termcolor.cprint(f'Gene: ', 'yellow', end='')
         print(gene)
