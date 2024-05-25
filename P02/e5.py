@@ -1,6 +1,6 @@
 from Seq1 import Seq
 from Client0 import Client
-IP = "212.128.255.75"
+IP = "127.0.0.1"
 PORT = 8080
 count = 0
 num = 0

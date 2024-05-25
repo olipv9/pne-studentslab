@@ -1,6 +1,6 @@
 from Client0 import Client
 import socket
-IP = "212.128.255.64"
+IP = "127.0.0.1"
 PORT = 8081
 
 c = Client(IP, PORT)

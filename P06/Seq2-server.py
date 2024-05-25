@@ -8,7 +8,7 @@ from Seq1P03 import Seq
 
 # Define the Server's port
 PORT = 8080
-num = 200
+
 # -- This is for preventing the error: "Port already in use"
 socketserver.TCPServer.allow_reuse_address = True
 sequence = {'0': 'ATACCAGTAG', '1':'ACACGATAGACAAG', '2':'CATGGACGTGAAC', '3':'ACCACACAGGCCACGT', '4':'AGCCGTGACGTAGCA'}
@@ -38,7 +38,7 @@ def check_for_seq_errors(seq):
 class TestHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
-
+        num = 200
         # Print the request line
         termcolor.cprint(self.requestline, 'green')
         # Open the form1.html file
