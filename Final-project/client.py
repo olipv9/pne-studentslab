@@ -22,6 +22,7 @@ def list_species(number):
 
 
 def karyotype(species):
+    species = species.replace(' ', '+')
     url = f"{BASE_URL}/karyotype?species={species}"
     url += '&json=1'
     response = requests.get(url)
@@ -33,6 +34,7 @@ def karyotype(species):
 
 
 def chromosome_length(species, chromosome):
+    species = species.replace(' ', '+')
     url = f"{BASE_URL}/chromosomeLength?species={species}&chromosome={chromosome}"
     url += '&json=1'
     response = requests.get(url)
@@ -57,7 +59,7 @@ def gene_sequence(gene):
 def gene_info(gene):
     url = f"{BASE_URL}/geneInfo?gene={gene}"
     url += '&json=1'
-    response = requests.get(url)
+    response = requests.get(url)    # To connect with the main server and the response
     if response.status_code == 200:
         print("Gene Info (JSON):")
         print(response.json())
