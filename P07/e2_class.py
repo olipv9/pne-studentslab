@@ -29,8 +29,8 @@ class GeneIdentifierClient:
             finally:
                 if connection:
                     connection.close()
-
         return gene_identifiers
+
 
 
 
